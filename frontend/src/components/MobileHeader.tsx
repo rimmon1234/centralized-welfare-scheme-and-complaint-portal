@@ -24,6 +24,7 @@ export function MobileHeader({
   role,
 }: MobileHeaderProps) {
   const identity = role === 'officer' ? officer : user
+  const visibleTabs = tabs.filter((t) => role === 'officer' || !t.officerOnly)
   /* Active pill settles in on tab switch (Animations.md §3.2). */
   const scope = useNavPillSettle(active)
 
@@ -56,7 +57,7 @@ export function MobileHeader({
         className="flex gap-1.5 overflow-x-auto px-5 pb-3"
         aria-label="Primary"
       >
-        {tabs.map((tab) => {
+        {visibleTabs.map((tab) => {
           const Icon = tab.icon
           const isActive = active === tab.id
           return (

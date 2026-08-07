@@ -24,6 +24,7 @@ export function Sidebar({
   role,
 }: SidebarProps) {
   const identity = role === 'officer' ? officer : user
+  const visibleTabs = tabs.filter((t) => role === 'officer' || !t.officerOnly)
   /* Nav pill settles softly into its new position on tab switch (§3.2). */
   const scope = useNavPillSettle(active)
 
@@ -57,7 +58,7 @@ export function Sidebar({
       </div>
 
       <nav className="mt-7 flex flex-col gap-1.5" aria-label="Primary">
-        {tabs.map((tab) => (
+        {visibleTabs.map((tab) => (
           <NavItem
             key={tab.id}
             tab={tab}

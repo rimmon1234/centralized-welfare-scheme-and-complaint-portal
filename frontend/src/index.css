@@ -195,6 +195,37 @@
   animation: search-pulse 900ms ease-out 2;
 }
 
+/* Block map — "community pulse" (officer desk): slow concentric ripples
+   emanating from the most-active ward. Reduced-motion renders a static
+   ring instead (the global reduce rule above zeroes animation durations). */
+@keyframes ward-pulse {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.85;
+  }
+  70% {
+    opacity: 0.3;
+  }
+  100% {
+    transform: scale(1.55);
+    opacity: 0;
+  }
+}
+.ward-pulse-ring {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ward-pulse 2.8s ease-out infinite;
+}
+
+/* Reduced motion: drop the animated ripple entirely — the static outer
+   ring stays as the calm fallback (the global reduce rule above only
+   zeroes durations, which would leave the rings frozen mid-frame). */
+@media (prefers-reduced-motion: reduce) {
+  .ward-pulse-ring {
+    opacity: 0;
+  }
+}
+
 /* Theme-switch crossfade (§4 Phase 2): applied transiently while the theme
    class flips, so background/border/text colors ease instead of snapping. */
 .theme-fade-active,

@@ -3,6 +3,7 @@ import { DecorativeBackground } from './components/DecorativeBackground'
 import { AuthPage } from './pages/auth/AuthPage'
 import type { Role } from './pages/auth/copy'
 import { OfficerPage } from './pages/officer/OfficerPage'
+import { OfficerMapPage } from './pages/officer/OfficerMapPage'
 import { OfficerProfilePage } from './pages/officer/OfficerProfilePage'
 import { OfficerHelplinePage } from './pages/officer/OfficerHelplinePage'
 import { Sidebar } from './components/Sidebar'
@@ -120,6 +121,7 @@ export default function App() {
                 <ResolvedSection />
               </>
             ))}
+          {tab === 'map' && role === 'officer' && <OfficerMapPage />}
           {tab === 'chat' && <ChatPage role={role} />}
           {tab === 'profile' &&
             (role === 'officer' ? <OfficerProfilePage /> : <ProfilePage />)}
