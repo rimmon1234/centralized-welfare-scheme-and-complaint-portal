@@ -137,7 +137,7 @@ export function ChatPage() {
             aria-pressed={language === lang.id}
             className={`rounded-full px-4 py-2 text-[13px] font-medium transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-brand-orange ${
               language === lang.id
-                ? 'bg-brand-navy text-white shadow-soft'
+                ? 'bg-brand-navy text-navy-contrast shadow-soft'
                 : 'border border-border-subtle bg-surface text-ink-700 hover:text-ink-900'
             }`}
           >
@@ -180,7 +180,7 @@ export function ChatPage() {
               aria-label="Speak your question"
               className={`flex shrink-0 items-center justify-center rounded-[12px] p-3 transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-brand-orange ${
                 listening
-                  ? 'bg-brand-orange text-white'
+                  ? 'bg-brand-orange text-white dark:text-[#16151b]'
                   : 'text-ink-700 hover:bg-surface'
               }`}
             >
@@ -199,7 +199,7 @@ export function ChatPage() {
             <button
               onClick={send}
               aria-label="Send message"
-              className="flex shrink-0 items-center justify-center gap-2 rounded-[14px] bg-brand-navy px-5 py-3 text-[13px] font-semibold uppercase tracking-[0.04em] text-white transition-colors duration-150 hover:bg-[#2d2839] focus-visible:outline-2 focus-visible:outline-brand-orange"
+              className="flex shrink-0 items-center justify-center gap-2 rounded-[14px] bg-brand-navy px-5 py-3 text-[13px] font-semibold uppercase tracking-[0.04em] text-navy-contrast transition-colors duration-150 hover:bg-[#2d2839] dark:hover:bg-[#d9d5cd] focus-visible:outline-2 focus-visible:outline-brand-orange"
             >
               <Send className="h-4 w-4" strokeWidth={1.75} />
               <span className="hidden sm:inline">Send</span>
@@ -222,7 +222,7 @@ function MessageBubble({ message }: { message: ChatMessage }) {
   if (isUser) {
     return (
       <div className="flex justify-end">
-        <p className="max-w-[85%] rounded-2xl rounded-br-md bg-brand-navy px-4 py-3 text-[15px] leading-relaxed text-white sm:max-w-[70%]">
+        <p className="max-w-[85%] rounded-2xl rounded-br-md bg-brand-navy px-4 py-3 text-[15px] leading-relaxed text-navy-contrast sm:max-w-[70%]">
           {message.text}
         </p>
       </div>
@@ -247,7 +247,7 @@ function MessageBubble({ message }: { message: ChatMessage }) {
 
 function BotAvatar() {
   return (
-    <span className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-navy">
+    <span className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-navy dark:bg-[#16151b]">
       <svg
         viewBox="0 0 24 24"
         className="h-4 w-4 text-brand-orange"
@@ -273,7 +273,7 @@ function SchemeSuggestion({ schemeId }: { schemeId: string }) {
         <p className="text-[11px] font-semibold uppercase tracking-wider text-ink-400">
           {scheme.category}
         </p>
-        <span className="ml-auto rounded-full bg-brand-mint/20 px-2 py-0.5 text-[10px] font-semibold text-[#3d7d6b]">
+        <span className="ml-auto rounded-full bg-brand-mint/20 px-2 py-0.5 text-[10px] font-semibold text-[#3d7d6b] dark:text-[#7fd1bb]">
           Documents verified ✓
         </span>
       </div>
@@ -283,7 +283,7 @@ function SchemeSuggestion({ schemeId }: { schemeId: string }) {
       <p className="mt-0.5 text-xs font-medium text-brand-orange">
         {scheme.benefit}
       </p>
-      <button className="mt-3 w-full rounded-[12px] bg-brand-navy px-4 py-2.5 text-[12px] font-semibold uppercase tracking-[0.04em] text-white transition-colors duration-150 hover:bg-[#2d2839] focus-visible:outline-2 focus-visible:outline-brand-orange">
+      <button className="mt-3 w-full rounded-[12px] bg-brand-navy px-4 py-2.5 text-[12px] font-semibold uppercase tracking-[0.04em] text-navy-contrast transition-colors duration-150 hover:bg-[#2d2839] dark:hover:bg-[#d9d5cd] focus-visible:outline-2 focus-visible:outline-brand-orange">
         Open application
       </button>
     </div>

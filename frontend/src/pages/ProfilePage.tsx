@@ -183,7 +183,7 @@ function DocumentsCard({
         <h3 className="font-display text-base font-semibold text-ink-900">
           Documents checklist
         </h3>
-        <span className="rounded-full bg-brand-mint/20 px-2.5 py-1 text-xs font-semibold text-[#3d7d6b]">
+        <span className="rounded-full bg-brand-mint/20 px-2.5 py-1 text-xs font-semibold text-[#3d7d6b] dark:text-[#7fd1bb]">
           {verified}/{total} verified
         </span>
       </div>
@@ -204,8 +204,8 @@ function DocumentsCard({
               <span
                 className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full ${
                   isVerified
-                    ? 'bg-brand-mint/25 text-[#3d7d6b]'
-                    : 'bg-brand-orange/20 text-[#b06a34]'
+                    ? 'bg-brand-mint/25 text-[#3d7d6b] dark:text-[#7fd1bb]'
+                    : 'bg-brand-orange/20 text-[#b06a34] dark:text-[#f0a468]'
                 }`}
               >
                 {isVerified ? (
@@ -225,8 +225,8 @@ function DocumentsCard({
               <span
                 className={`shrink-0 rounded-full px-2.5 py-1 text-[11px] font-semibold ${
                   isVerified
-                    ? 'bg-brand-mint/20 text-[#3d7d6b]'
-                    : 'bg-brand-orange/15 text-[#b06a34]'
+                    ? 'bg-brand-mint/20 text-[#3d7d6b] dark:text-[#7fd1bb]'
+                    : 'bg-brand-orange/15 text-[#b06a34] dark:text-[#f0a468]'
                 }`}
               >
                 {doc.status}

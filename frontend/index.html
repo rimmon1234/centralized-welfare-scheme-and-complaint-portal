@@ -12,6 +12,21 @@
       content="SevaNest — welfare scheme matching and transparent grievance redressal for every citizen."
     />
     <title>SevaNest — Welfare schemes &amp; grievance redressal</title>
+    <script>
+      ;(function () {
+        try {
+          var stored = localStorage.getItem('sevanest-theme')
+          var dark =
+            stored === 'dark' ||
+            (!stored &&
+              window.matchMedia('(prefers-color-scheme: dark)').matches)
+          if (dark) {
+            document.documentElement.classList.add('dark')
+            document.documentElement.style.colorScheme = 'dark'
+          }
+        } catch (e) {}
+      })()
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link

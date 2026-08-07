@@ -45,7 +45,7 @@ export function ComplaintBar({
         </button>
         <button
           onClick={fileComplaint}
-          className="shrink-0 rounded-[14px] bg-brand-navy px-6 py-3.5 text-[13px] font-semibold uppercase tracking-[0.04em] text-white transition-colors duration-150 hover:bg-[#2d2839] focus-visible:outline-2 focus-visible:outline-brand-orange sm:px-8"
+          className="shrink-0 rounded-[14px] bg-brand-navy px-6 py-3.5 text-[13px] font-semibold uppercase tracking-[0.04em] text-navy-contrast transition-colors duration-150 hover:bg-[#2d2839] dark:hover:bg-[#d9d5cd] focus-visible:outline-2 focus-visible:outline-brand-orange sm:px-8"
         >
           File a complaint
         </button>

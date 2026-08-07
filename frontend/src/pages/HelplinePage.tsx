@@ -34,7 +34,7 @@ export function HelplinePage() {
 
       {/* Anonymity banner */}
       <div className="mt-6 flex items-center gap-3 rounded-2xl bg-brand-mint/20 px-5 py-4">
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-navy text-brand-orange">
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-navy text-brand-orange dark:bg-[#16151b]">
           <ShieldCheck className="h-4 w-4" strokeWidth={1.75} />
         </span>
         <p className="text-[13px] leading-relaxed text-ink-900">
@@ -63,7 +63,7 @@ export function HelplinePage() {
                 aria-pressed={category === option}
                 className={`rounded-full px-4 py-2 text-[13px] font-medium transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-brand-orange ${
                   category === option
-                    ? 'bg-brand-navy text-white shadow-soft'
+                    ? 'bg-brand-navy text-navy-contrast shadow-soft'
                     : 'border border-border-subtle bg-canvas/50 text-ink-700 hover:text-ink-900'
                 }`}
               >
@@ -94,7 +94,7 @@ export function HelplinePage() {
               aria-pressed={evidence}
               className={`flex items-center gap-2 rounded-[14px] border px-4 py-3 text-[13px] font-medium transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-brand-orange ${
                 evidence
-                  ? 'border-brand-mint bg-brand-mint/15 text-[#3d7d6b]'
+                  ? 'border-brand-mint bg-brand-mint/15 text-[#3d7d6b] dark:text-[#7fd1bb]'
                   : 'border-dashed border-ink-400/50 text-ink-700 hover:border-brand-orange/60 hover:text-ink-900'
               }`}
             >
@@ -106,7 +106,7 @@ export function HelplinePage() {
               aria-pressed={located}
               className={`flex items-center gap-2 rounded-[14px] border px-4 py-3 text-[13px] font-medium transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-brand-orange ${
                 located
-                  ? 'border-brand-mint bg-brand-mint/15 text-[#3d7d6b]'
+                  ? 'border-brand-mint bg-brand-mint/15 text-[#3d7d6b] dark:text-[#7fd1bb]'
                   : 'border-dashed border-ink-400/50 text-ink-700 hover:border-brand-orange/60 hover:text-ink-900'
               }`}
             >
@@ -135,7 +135,7 @@ export function HelplinePage() {
 
           <button
             onClick={submit}
-            className="mt-6 flex w-full items-center justify-center gap-2 rounded-[16px] bg-brand-navy px-6 py-4 text-[13px] font-semibold uppercase tracking-[0.04em] text-white transition-colors duration-150 hover:bg-[#2d2839] focus-visible:outline-2 focus-visible:outline-brand-orange"
+            className="mt-6 flex w-full items-center justify-center gap-2 rounded-[16px] bg-brand-navy px-6 py-4 text-[13px] font-semibold uppercase tracking-[0.04em] text-navy-contrast transition-colors duration-150 hover:bg-[#2d2839] dark:hover:bg-[#d9d5cd] focus-visible:outline-2 focus-visible:outline-brand-orange"
           >
             <ShieldCheck className="h-4 w-4" strokeWidth={1.75} />
             Submit anonymous report
@@ -172,7 +172,7 @@ export function HelplinePage() {
                       href={`tel:${contact.number}`}
                       className="flex w-full items-center gap-3 rounded-xl bg-canvas/60 px-4 py-3 text-left transition-colors duration-150 hover:bg-canvas focus-visible:outline-2 focus-visible:outline-brand-orange"
                     >
-                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-navy text-brand-orange">
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-navy text-brand-orange dark:bg-[#16151b]">
                         <Icon className="h-4 w-4" strokeWidth={1.5} />
                       </span>
                       <span className="flex-1 text-[13px] font-medium text-ink-900">
@@ -199,7 +199,7 @@ export function HelplinePage() {
                   {i < helplineSteps.length - 1 && (
                     <span className="absolute left-[15px] top-8 h-[calc(100%-1rem)] w-px bg-border-subtle" />
                   )}
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-navy font-display text-sm font-semibold text-white">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-navy font-display text-sm font-semibold text-white dark:bg-[#16151b]">
                     {i + 1}
                   </span>
                   <div>

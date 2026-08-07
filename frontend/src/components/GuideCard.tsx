@@ -43,7 +43,7 @@ export function GuideCard() {
         </ol>
       </div>
 
-      <button className="mt-6 flex w-full items-center justify-center gap-2 rounded-[14px] bg-brand-navy px-5 py-3 text-[13px] font-semibold uppercase tracking-[0.04em] text-white transition-colors duration-150 hover:bg-[#2d2839] focus-visible:outline-2 focus-visible:outline-brand-orange">
+      <button className="mt-6 flex w-full items-center justify-center gap-2 rounded-[14px] bg-brand-navy px-5 py-3 text-[13px] font-semibold uppercase tracking-[0.04em] text-navy-contrast transition-colors duration-150 hover:bg-[#2d2839] dark:hover:bg-[#d9d5cd] focus-visible:outline-2 focus-visible:outline-brand-orange">
         Continue PM-Kisan application
         <ArrowRight className="h-4 w-4" strokeWidth={2} />
       </button>

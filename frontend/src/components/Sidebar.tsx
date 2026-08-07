@@ -1,16 +1,23 @@
 import { ChevronDown, ChevronRight } from 'lucide-react'
 import { tabs, user, type Tab, type TabId } from '../data'
+import type { Theme } from '../hooks/useTheme'
 import { Logo } from './Logo'
+import { ThemeToggle } from './ThemeToggle'
 
 interface SidebarProps {
   active: TabId
   onSelect: (id: TabId) => void
+  theme: Theme
+  onToggleTheme: () => void
 }
 
-export function Sidebar({ active, onSelect }: SidebarProps) {
+export function Sidebar({ active, onSelect, theme, onToggleTheme }: SidebarProps) {
   return (
     <aside className="fixed inset-y-0 left-0 z-30 hidden w-[264px] flex-col border-r border-border-subtle bg-surface px-5 py-6 lg:flex">
-      <Logo />
+      <div className="flex items-center justify-between">
+        <Logo />
+        <ThemeToggle theme={theme} onToggle={onToggleTheme} />
+      </div>
 
       {/* User chip */}
       <div className="mt-7 flex items-center gap-3 rounded-2xl border border-border-subtle px-3 py-2.5">
@@ -63,7 +70,7 @@ function NavItem({
       aria-current={active ? 'page' : undefined}
       className={`flex items-center gap-3 rounded-[14px] px-4 py-3 text-left transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-brand-orange ${
         active
-          ? 'bg-brand-navy text-white shadow-soft'
+          ? 'bg-brand-navy text-navy-contrast shadow-soft'
           : 'text-ink-400 hover:bg-canvas hover:text-ink-900'
       }`}
     >

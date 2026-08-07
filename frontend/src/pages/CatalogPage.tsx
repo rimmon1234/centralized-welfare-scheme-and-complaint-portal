@@ -71,7 +71,7 @@ export function CatalogPage() {
             aria-pressed={category === filter}
             className={`rounded-full px-4 py-2 text-[13px] font-medium transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-brand-orange ${
               category === filter
-                ? 'bg-brand-navy text-white shadow-soft'
+                ? 'bg-brand-navy text-navy-contrast shadow-soft'
                 : 'border border-border-subtle bg-surface text-ink-700 hover:text-ink-900'
             }`}
           >
@@ -106,7 +106,7 @@ function CatalogCard({ scheme }: { scheme: CatalogScheme }) {
           {scheme.category}
         </p>
         {scheme.matched && (
-          <span className="ml-auto rounded-full bg-brand-mint/20 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-[#3d7d6b]">
+          <span className="ml-auto rounded-full bg-brand-mint/20 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-[#3d7d6b] dark:text-[#7fd1bb]">
             Matched ✓
           </span>
         )}
@@ -127,7 +127,7 @@ function CatalogCard({ scheme }: { scheme: CatalogScheme }) {
         <button
           className={`w-full rounded-[14px] px-5 py-3 text-[13px] font-semibold uppercase tracking-[0.04em] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-brand-orange ${
             scheme.matched
-              ? 'bg-brand-navy text-white hover:bg-[#2d2839]'
+              ? 'bg-brand-navy text-navy-contrast hover:bg-[#2d2839] dark:hover:bg-[#d9d5cd]'
               : 'border border-brand-navy/25 text-brand-navy hover:bg-canvas'
           }`}
         >

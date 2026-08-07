@@ -11,7 +11,7 @@ export function DecorativeBackground() {
       {/* Concentric spiral — top-left */}
       <svg
         viewBox="0 0 240 240"
-        className="absolute -left-12 -top-14 h-72 w-72 text-brand-mint opacity-20"
+        className="absolute -left-12 -top-14 h-72 w-72 text-brand-mint opacity-20 dark:opacity-10"
         fill="none"
         stroke="currentColor"
         strokeWidth="1.5"
@@ -23,7 +23,7 @@ export function DecorativeBackground() {
       {/* Loose ribbon squiggle — top-right */}
       <svg
         viewBox="0 0 320 130"
-        className="absolute -right-8 top-20 h-36 w-80 text-brand-mint opacity-15"
+        className="absolute -right-8 top-20 h-36 w-80 text-brand-mint opacity-15 dark:opacity-10"
         fill="none"
         stroke="currentColor"
         strokeWidth="1.5"
@@ -36,7 +36,7 @@ export function DecorativeBackground() {
       {/* Small squiggle — bottom-left */}
       <svg
         viewBox="0 0 160 80"
-        className="absolute bottom-12 left-10 h-16 w-36 text-brand-mint opacity-15"
+        className="absolute bottom-12 left-10 h-16 w-36 text-brand-mint opacity-15 dark:opacity-10"
         fill="none"
         stroke="currentColor"
         strokeWidth="1.5"

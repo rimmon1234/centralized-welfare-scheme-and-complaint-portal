@@ -11,17 +11,17 @@ const STATUS_STYLES: Record<
   { chip: string; dot: string; icon: typeof Clock3 }
 > = {
   Resolved: {
-    chip: 'bg-brand-mint/20 text-[#3d7d6b]',
+    chip: 'bg-brand-mint/20 text-[#3d7d6b] dark:text-[#7fd1bb]',
     dot: 'bg-brand-mint',
     icon: CheckCircle2,
   },
   'Under review': {
-    chip: 'bg-brand-orange/15 text-[#b06a34]',
+    chip: 'bg-brand-orange/15 text-[#b06a34] dark:text-[#f0a468]',
     dot: 'bg-brand-orange',
     icon: Clock3,
   },
   Open: {
-    chip: 'bg-brand-navy/10 text-brand-navy',
+    chip: 'bg-brand-navy/10 text-brand-navy dark:bg-[#f2f0ec]/15 dark:text-[#f2f0ec]',
     dot: 'bg-brand-navy',
     icon: CircleAlert,
   },
@@ -69,8 +69,8 @@ function ComplaintRow({ complaint }: { complaint: Complaint }) {
         <span
           className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${
             resolved
-              ? 'bg-brand-mint/20 text-[#3d7d6b]'
-              : 'bg-brand-navy/10 text-brand-navy'
+              ? 'bg-brand-mint/20 text-[#3d7d6b] dark:text-[#7fd1bb]'
+              : 'bg-brand-navy/10 text-brand-navy dark:bg-[#f2f0ec]/15 dark:text-[#f2f0ec]'
           }`}
         >
           <Icon className="h-5 w-5" strokeWidth={1.75} />
