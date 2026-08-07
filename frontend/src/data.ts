@@ -6,6 +6,7 @@ import {
   Headset,
   HeartHandshake,
   LayoutGrid,
+  Map,
   MessagesSquare,
   Phone,
   Shield,
@@ -16,16 +17,25 @@ import {
 
 /* ── Navigation ──────────────────────────────────────────── */
 
-export type TabId = 'overview' | 'chat' | 'profile' | 'schemes' | 'helpline'
+export type TabId =
+  | 'overview'
+  | 'map'
+  | 'chat'
+  | 'profile'
+  | 'schemes'
+  | 'helpline'
 
 export interface Tab {
   id: TabId
   label: string
   icon: LucideIcon
+  /** Staff-only destinations — hidden from the citizen sidebar. */
+  officerOnly?: boolean
 }
 
 export const tabs: Tab[] = [
   { id: 'overview', label: 'Overview', icon: LayoutGrid },
+  { id: 'map', label: 'Block map', icon: Map, officerOnly: true },
   { id: 'schemes', label: 'Scheme catalog', icon: FileText },
   { id: 'helpline', label: 'Helpline', icon: Phone },
   { id: 'chat', label: 'Sahayak chat', icon: MessagesSquare },
@@ -400,6 +410,179 @@ export const officerEscalationSteps = [
     text: 'Anything unresolved after 7 days moves to the district desk — no action needed from you.',
   },
 ]
+
+/* ── Officer block map — a stylized ward map of Uluberia-I.
+   Every complaint in the desk queue and case log is pinned to its ward.
+   Pins stay ward-level on purpose: anonymous reports never show exact
+   locations (design.md §8 line-art language, no stock tiles). ─────── */
+
+export interface BlockIncident {
+  ref: string
+  title: string
+  status: Status
+  /** Days since filed — drives the "oldest unresolved" surfacing. */
+  age: number
+}
+
+export interface BlockWard {
+  id: string
+  name: string
+  sub: string
+  /** Hex-grid position (pointy-top, odd rows offset right). */
+  row: number
+  col: number
+  /** Shared service relationship, drawn as a labelled edge (e.g. the
+   *  ration-depot catchment that spans Ward 3 market + Fuleswar depot). */
+  catchment?: string
+  incidents: BlockIncident[]
+}
+
+export const blockMap: {
+  block: string
+  districts: string
+  river: string
+  wards: BlockWard[]
+} = {
+  block: 'Uluberia-I',
+  districts: 'Howrah · West Bengal',
+  river: 'Hooghly',
+  wards: [
+    {
+      id: 'college-road',
+      name: 'College Road',
+      sub: 'Ward 12 · avenue',
+      row: 0,
+      col: 0,
+      incidents: [
+        {
+          ref: 'SR-1038',
+          title: 'Street light outage',
+          status: 'Resolved',
+          age: 3,
+        },
+      ],
+    },
+    {
+      id: 'ward-3',
+      name: 'Ward 3',
+      sub: 'Market zone',
+      row: 0,
+      col: 1,
+      catchment: 'ration-depot',
+      incidents: [
+        {
+          ref: 'SR-1056',
+          title: 'Ration card not renewed',
+          status: 'Under review',
+          age: 5,
+        },
+      ],
+    },
+    {
+      id: 'purba-para',
+      name: 'Purba Para',
+      sub: 'Ward 6 · schools',
+      row: 0,
+      col: 2,
+      incidents: [
+        {
+          ref: 'SR-1024',
+          title: 'Mid-day meal quality',
+          status: 'Resolved',
+          age: 5,
+        },
+      ],
+    },
+    {
+      id: 'ward-7',
+      name: 'Ward 7',
+      sub: 'Bazaar crossing',
+      row: 1,
+      col: 0,
+      incidents: [
+        {
+          ref: 'SR-1051',
+          title: 'Road pothole at bazaar crossing',
+          status: 'Resolved',
+          age: 4,
+        },
+      ],
+    },
+    {
+      id: 'fuleswar',
+      name: 'Fuleswar',
+      sub: 'Ration depot village',
+      row: 1,
+      col: 1,
+      catchment: 'ration-depot',
+      incidents: [
+        {
+          ref: 'SR-1044',
+          title: 'Harassment at ration shop',
+          status: 'Open',
+          age: 2,
+        },
+      ],
+    },
+    {
+      id: 'durganagar',
+      name: 'Durganagar',
+      sub: 'Ward 4 · town centre',
+      row: 1,
+      col: 2,
+      incidents: [
+        {
+          ref: 'SR-1041',
+          title: 'Water supply disruption',
+          status: 'Under review',
+          age: 6,
+        },
+        {
+          ref: 'SR-1052',
+          title: 'PM-Kisan payment not credited',
+          status: 'Open',
+          age: 1,
+        },
+        {
+          ref: 'SR-1047',
+          title: 'Old-age pension not credited',
+          status: 'Under review',
+          age: 1,
+        },
+      ],
+    },
+    {
+      id: 'ward-9',
+      name: 'Ward 9',
+      sub: 'Anganwadi zone',
+      row: 2,
+      col: 0,
+      incidents: [
+        {
+          ref: 'SR-1055',
+          title: 'Anganwadi ration missing',
+          status: 'Open',
+          age: 3,
+        },
+      ],
+    },
+    {
+      id: 'ward-8',
+      name: 'Ward 8',
+      sub: 'East residential',
+      row: 2,
+      col: 1,
+      incidents: [
+        {
+          ref: 'SR-1053',
+          title: 'Drain overflow near school',
+          status: 'Open',
+          age: 4,
+        },
+      ],
+    },
+  ],
+}
 
 /* ── Officer Sahayak chat ────────────────────────────────── */
 
