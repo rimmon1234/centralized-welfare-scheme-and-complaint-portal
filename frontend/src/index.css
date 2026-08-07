@@ -1,0 +1,73 @@
+@import "tailwindcss";
+
+@theme {
+  /* ── Fonts (design.md §3) ─────────────────────────────── */
+  --font-display: "Quicksand", "Poppins", "Segoe UI", sans-serif;
+  --font-sans: "Inter", "Segoe UI", sans-serif;
+
+  /* ── Core neutrals (design.md §2) ─────────────────────── */
+  --color-canvas: #eae7e0;
+  --color-canvas-alt: #dedbd3;
+  --color-surface: #ffffff;
+  --color-ink-900: #201c2a;
+  --color-ink-700: #3a3644;
+  --color-ink-400: #8a8790;
+  --color-border-subtle: #e7e4dd;
+
+  /* ── Brand / accent ───────────────────────────────────── */
+  --color-brand-navy: #211d2c;
+  --color-brand-orange: #e38f55;
+  --color-brand-mint: #6fbba6;
+
+  /* ── Flat pastel card fields ──────────────────────────── */
+  --color-card-lavender: #a6b1d6;
+  --color-card-olive: #a79c74;
+  --color-card-terracotta: #dd8f5c;
+  --color-card-sage: #8ca89b;
+  --color-card-mauve: #afa6ac;
+  --color-card-khaki: #c3bc82;
+
+  /* ── Hero band gradient ───────────────────────────────── */
+  --color-hero-sage-start: #d2d8cb;
+  --color-hero-sage-end: #ffffff;
+
+  /* ── Elevation (design.md §5) ─────────────────────────── */
+  --shadow-soft: 0 12px 32px rgba(32, 28, 42, 0.06);
+  --shadow-lift: 0 18px 40px rgba(32, 28, 42, 0.11);
+}
+
+/* Diagonal hero band: sage (top-left) → white (bottom-right) */
+@utility hero-band {
+  background-image: linear-gradient(
+    135deg,
+    var(--color-hero-sage-start) 0%,
+    var(--color-hero-sage-end) 68%
+  );
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    @apply bg-canvas font-sans text-ink-900;
+  }
+  ::selection {
+    background: var(--color-brand-mint);
+    color: var(--color-brand-navy);
+  }
+  button {
+    cursor: pointer;
+  }
+}
+
+/* Respect users who prefer reduced motion (design.md §11.5) */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
