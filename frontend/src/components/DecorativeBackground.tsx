@@ -2,11 +2,19 @@
  * Ambient thin line-art doodles on the outer page background only
  * (design.md §8) — fixed behind the app shell, never interactive.
  */
-export function DecorativeBackground() {
+export function DecorativeBackground({
+  /* The dashboard shell reserves 264px for the sidebar; the auth page is
+     full-bleed, so the doodles are centred on the whole viewport there. */
+  insetForSidebar = true,
+}: {
+  insetForSidebar?: boolean
+}) {
   return (
     <div
       aria-hidden
-      className="pointer-events-none fixed inset-0 z-0 overflow-hidden lg:left-[264px]"
+      className={`pointer-events-none fixed inset-0 z-0 overflow-hidden ${
+        insetForSidebar ? 'lg:left-[264px]' : ''
+      }`}
     >
       {/* Concentric spiral — top-left (slow ambient drift, Animations.md §3.3) */}
       <svg

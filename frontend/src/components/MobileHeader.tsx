@@ -1,4 +1,6 @@
-import { tabs, user, type TabId } from '../data'
+import { LogOut } from 'lucide-react'
+import { tabs, user, officer, type TabId } from '../data'
+import type { Role } from '../pages/auth/copy'
 import type { Theme } from '../hooks/useTheme'
 import { useNavPillSettle } from '../hooks/useNavPillSettle'
 import { Logo } from './Logo'
@@ -9,6 +11,8 @@ interface MobileHeaderProps {
   onSelect: (id: TabId) => void
   theme: Theme
   onToggleTheme: () => void
+  onSignOut: () => void
+  role: Role
 }
 
 export function MobileHeader({
@@ -16,7 +20,10 @@ export function MobileHeader({
   onSelect,
   theme,
   onToggleTheme,
+  onSignOut,
+  role,
 }: MobileHeaderProps) {
+  const identity = role === 'officer' ? officer : user
   /* Active pill settles in on tab switch (Animations.md §3.2). */
   const scope = useNavPillSettle(active)
 
@@ -29,9 +36,17 @@ export function MobileHeader({
         <Logo />
         <div className="flex items-center gap-2">
           <ThemeToggle theme={theme} onToggle={onToggleTheme} />
-            <div className="relative">
+          <button
+            onClick={onSignOut}
+            aria-label="Sign out (demo)"
+            title="Sign out (demo)"
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-border-subtle bg-surface text-ink-700 shadow-soft transition-colors duration-150 hover:text-brand-orange focus-visible:outline-2 focus-visible:outline-brand-orange"
+          >
+            <LogOut className="h-4 w-4" strokeWidth={1.5} />
+          </button>
+          <div className="relative">
             <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-brand-orange to-[#c97a45] text-xs font-semibold text-white">
-              {user.initials}
+              {identity.initials}
             </div>
             <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-canvas bg-brand-mint" />
           </div>

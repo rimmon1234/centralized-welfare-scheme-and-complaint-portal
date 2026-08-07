@@ -7,8 +7,12 @@ import {
   catalogSchemes,
   introMessages,
   languages,
+  officerBotReplies,
+  officerIntroMessages,
+  officerQuickReplies,
   quickReplies,
 } from '../data'
+import type { Role } from './auth/copy'
 
 interface ChatMessage {
   id: number
@@ -23,7 +27,7 @@ const LANG_NAMES: Record<string, string> = {
   en: 'English',
 }
 
-const initialMessages: ChatMessage[] = [
+const citizenInitialMessages: ChatMessage[] = [
   {
     id: 1,
     role: 'bot',
@@ -37,9 +41,26 @@ const initialMessages: ChatMessage[] = [
   },
 ]
 
-export function ChatPage() {
+const officerInitialMessages: ChatMessage[] = [
+  {
+    id: 1,
+    role: 'bot',
+    text: officerIntroMessages.bn,
+  },
+  {
+    id: 2,
+    role: 'bot',
+    text: 'Your desk: 7 reports awaiting action. The closest to the deadline is SR-1041 (Day 6 of 7). Here is what is queued for review 👇',
+    schemeId: 'pmkisan',
+  },
+]
+
+export function ChatPage({ role }: { role: Role }) {
+  const isOfficer = role === 'officer'
   const [language, setLanguage] = useState('bn')
-  const [messages, setMessages] = useState<ChatMessage[]>(initialMessages)
+  const [messages, setMessages] = useState<ChatMessage[]>(
+    isOfficer ? officerInitialMessages : citizenInitialMessages,
+  )
   const [input, setInput] = useState('')
   const [typing, setTyping] = useState(false)
   const [listening, setListening] = useState(false)
@@ -111,12 +132,13 @@ export function ChatPage() {
   }
 
   const botReply = (schemeId?: string) => {
+    const replies = isOfficer ? officerBotReplies : botReplies
     setTyping(true)
     schedule(() => {
       setTyping(false)
       append({
         role: 'bot',
-        text: botReplies[replyIndex.current % botReplies.length],
+        text: replies[replyIndex.current % replies.length],
         schemeId,
       })
       replyIndex.current += 1
@@ -139,7 +161,10 @@ export function ChatPage() {
   const switchLanguage = (id: string) => {
     if (id === language) return
     setLanguage(id)
-    append({ role: 'bot', text: introMessages[id] })
+    append({
+      role: 'bot',
+      text: isOfficer ? officerIntroMessages[id] : introMessages[id],
+    })
   }
 
   const startVoice = () => {
@@ -147,15 +172,27 @@ export function ChatPage() {
     setListening(true)
     schedule(() => {
       setListening(false)
-      append({ role: 'user', text: '🎤 “Am I eligible for a housing scheme?”' })
+      append({
+        role: 'user',
+        text: isOfficer
+          ? '🎤 “Which reports are due this week?”'
+          : '🎤 “Am I eligible for a housing scheme?”',
+      })
       setTyping(true)
       schedule(() => {
         setTyping(false)
-        append({
-          role: 'bot',
-          text: 'Yes! With your rural residence and household income under ₹3L, you likely qualify for PM Awas Yojana. Your income certificate is already verified — the form takes about 8 minutes. 👇',
-          schemeId: 'pmay',
-        })
+        append(
+          isOfficer
+            ? {
+                role: 'bot',
+                text: 'Two reports are due this week: SR-1041 (Water supply, Day 6 of 7) and SR-1056 (Ration card, Day 5). Resolving them today keeps your block on track. ⏰',
+              }
+            : {
+                role: 'bot',
+                text: 'Yes! With your rural residence and household income under ₹3L, you likely qualify for PM Awas Yojana. Your income certificate is already verified — the form takes about 8 minutes. 👇',
+                schemeId: 'pmay',
+              },
+        )
       }, 1200)
     }, 2200)
   }
@@ -179,7 +216,11 @@ export function ChatPage() {
     <div>
       <PageHeader
         title="Sahayak chat"
-        subtitle="Ask anything in your own language — by text or voice. No jargon, no forms-speak."
+        subtitle={
+          isOfficer
+            ? 'Your desk assistant — ask about pending reports, applications to review, or deadlines. In your language, by text or voice.'
+            : 'Ask anything in your own language — by text or voice. No jargon, no forms-speak.'
+        }
       />
 
       {/* Language switcher */}
@@ -207,7 +248,11 @@ export function ChatPage() {
       <div className="mt-4 flex flex-col rounded-[24px] border border-border-subtle bg-surface shadow-soft">
         <div className="flex h-[460px] flex-col gap-4 overflow-y-auto p-5 sm:p-6">
           {messages.map((message) => (
-            <MessageBubble key={message.id} message={message} />
+            <MessageBubble
+              key={message.id}
+              message={message}
+              isOfficer={isOfficer}
+            />
           ))}
           {typing && (
             <div className="bubble-pop">
@@ -219,7 +264,7 @@ export function ChatPage() {
 
         {/* Quick replies */}
         <div className="flex flex-wrap gap-2 border-t border-border-subtle px-5 py-3 sm:px-6">
-          {quickReplies.map((reply) => (
+          {(isOfficer ? officerQuickReplies : quickReplies).map((reply) => (
             <button
               key={reply}
               onClick={() => sendQuick(reply)}
@@ -275,7 +320,13 @@ export function ChatPage() {
   )
 }
 
-function MessageBubble({ message }: { message: ChatMessage }) {
+function MessageBubble({
+  message,
+  isOfficer,
+}: {
+  message: ChatMessage
+  isOfficer: boolean
+}) {
   const isUser = message.role === 'user'
   if (isUser) {
     return (
@@ -296,7 +347,7 @@ function MessageBubble({ message }: { message: ChatMessage }) {
       </div>
       {message.schemeId && (
         <div data-scheme-card className="ml-11 mt-2">
-          <SchemeSuggestion schemeId={message.schemeId} />
+          <SchemeSuggestion schemeId={message.schemeId} isOfficer={isOfficer} />
         </div>
       )}
     </div>
@@ -321,7 +372,13 @@ function BotAvatar() {
   )
 }
 
-function SchemeSuggestion({ schemeId }: { schemeId: string }) {
+function SchemeSuggestion({
+  schemeId,
+  isOfficer,
+}: {
+  schemeId: string
+  isOfficer: boolean
+}) {
   const scheme = catalogSchemes.find((s) => s.id === schemeId)
   if (!scheme) return null
   return (
@@ -332,7 +389,7 @@ function SchemeSuggestion({ schemeId }: { schemeId: string }) {
           {scheme.category}
         </p>
         <span className="ml-auto rounded-full bg-brand-mint/20 px-2 py-0.5 text-[10px] font-semibold text-[#3d7d6b] dark:text-[#7fd1bb]">
-          Documents verified ✓
+          {isOfficer ? 'In your block ✓' : 'Documents verified ✓'}
         </span>
       </div>
       <p className="mt-2 text-[15px] font-semibold text-ink-900">
@@ -342,7 +399,7 @@ function SchemeSuggestion({ schemeId }: { schemeId: string }) {
         {scheme.benefit}
       </p>
       <button className="mt-3 w-full rounded-[12px] bg-brand-navy px-4 py-2.5 text-[12px] font-semibold uppercase tracking-[0.04em] text-navy-contrast transition-colors duration-150 hover:bg-[#2d2839] dark:hover:bg-[#d9d5cd] focus-visible:outline-2 focus-visible:outline-brand-orange">
-        Open application
+        {isOfficer ? 'Review applications' : 'Open application'}
       </button>
     </div>
   )
