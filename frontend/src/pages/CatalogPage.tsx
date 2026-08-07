@@ -17,9 +17,11 @@ import {
 import {
   catalogCategories,
   catalogSchemes,
+  officerSchemeStats,
   type CatalogCategory,
   type CatalogScheme,
 } from '../data'
+import type { Role } from './auth/copy'
 
 const CATEGORY_DOTS: Record<CatalogCategory, string> = {
   Housing: 'bg-card-lavender',
@@ -35,7 +37,8 @@ const CATEGORY_DOTS: Record<CatalogCategory, string> = {
 type CategoryFilter = CatalogCategory | 'All'
 const filters: CategoryFilter[] = ['All', ...catalogCategories]
 
-export function CatalogPage() {
+export function CatalogPage({ role }: { role: Role }) {
+  const isOfficer = role === 'officer'
   const [query, setQuery] = useState('')
   const [category, setCategory] = useState<CategoryFilter>('All')
   const scope = useRef<HTMLDivElement>(null)
@@ -130,8 +133,16 @@ export function CatalogPage() {
     <div>
       <PageHeader
         title="Scheme catalog"
-        subtitle="Every active scheme in one place — filter by category or search. Matched schemes are ready to apply for."
-        count={`${filtered.length} of ${catalogSchemes.length} schemes`}
+        subtitle={
+          isOfficer
+            ? 'Applications filed in your block, per scheme — review, verify and approve within the service window.'
+            : 'Every active scheme in one place — filter by category or search. Matched schemes are ready to apply for.'
+        }
+        count={
+          isOfficer
+            ? `${filtered.length} schemes`
+            : `${filtered.length} of ${catalogSchemes.length} schemes`
+        }
       />
 
       {/* Search */}
@@ -172,9 +183,13 @@ export function CatalogPage() {
         ref={scope}
         className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2"
       >
-        {filtered.map((scheme) => (
-          <CatalogCard key={scheme.id} scheme={scheme} />
-        ))}
+        {filtered.map((scheme) =>
+          isOfficer ? (
+            <OfficerCatalogCard key={scheme.id} scheme={scheme} />
+          ) : (
+            <CatalogCard key={scheme.id} scheme={scheme} />
+          ),
+        )}
         {filtered.length === 0 && (
           <p className="col-span-full rounded-2xl border border-dashed border-ink-400/40 bg-surface/60 px-6 py-10 text-center text-sm text-ink-400">
             No schemes match “{query}”. Try a different word or category.
@@ -222,6 +237,68 @@ function CatalogCard({ scheme }: { scheme: CatalogScheme }) {
           }`}
         >
           {scheme.matched ? 'Apply now' : 'Check eligibility'}
+        </button>
+      </div>
+    </div>
+  )
+}
+
+/* Officer variant — the same card system, but the CTA is a review queue
+   and the status is the number of applications waiting in the block. */
+function OfficerCatalogCard({ scheme }: { scheme: CatalogScheme }) {
+  const stats = officerSchemeStats[scheme.id]
+  const pendingPct = stats
+    ? Math.min(100, Math.round((stats.pending / stats.applications) * 100))
+    : 0
+  return (
+    <div className="catalog-card flex flex-col rounded-2xl border border-border-subtle bg-surface p-6 shadow-soft transition-[box-shadow,translate] duration-150 ease-out hover:-translate-y-0.5 hover:shadow-lift">
+      <div className="flex items-center gap-2">
+        <span
+          className={`h-2.5 w-2.5 rounded-full ${CATEGORY_DOTS[scheme.category]}`}
+        />
+        <p className="text-[11px] font-semibold uppercase tracking-wider text-ink-400">
+          {scheme.category}
+        </p>
+        {stats && stats.overdue > 0 && (
+          <span className="ml-auto rounded-full bg-brand-orange/15 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-[#b06a34] dark:text-[#f0a468]">
+            {stats.overdue} overdue
+          </span>
+        )}
+      </div>
+      <h3 className="mt-3 font-display text-lg font-semibold text-ink-900">
+        {scheme.title}
+      </h3>
+      <p className="mt-1 text-sm leading-relaxed text-ink-700">
+        {scheme.description}
+      </p>
+
+      {stats && (
+        <div className="mt-4 rounded-xl bg-canvas/60 px-4 py-3">
+          <div className="flex items-baseline justify-between gap-2">
+            <p className="text-sm font-semibold text-ink-900">
+              {stats.applications} applications
+            </p>
+            <p className="text-xs text-ink-400">{stats.pending} pending</p>
+          </div>
+          <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-canvas">
+            <div
+              className="h-full rounded-full bg-brand-orange"
+              style={{ width: `${pendingPct}%` }}
+            />
+          </div>
+          <p className="mt-2 text-xs text-ink-400">
+            {stats.pending > 0
+              ? `${stats.pending} await your review within the 7-day window.`
+              : 'All applications reviewed — nothing pending.'}
+          </p>
+        </div>
+      )}
+
+      <div className="mt-auto pt-5">
+        <button
+          className="w-full rounded-[14px] bg-brand-navy px-5 py-3 text-[13px] font-semibold uppercase tracking-[0.04em] text-navy-contrast transition-colors duration-150 hover:bg-[#2d2839] dark:hover:bg-[#d9d5cd] focus-visible:outline-2 focus-visible:outline-brand-orange"
+        >
+          Review applications
         </button>
       </div>
     </div>

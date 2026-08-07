@@ -1,6 +1,10 @@
 import { useState } from 'react'
 import { DecorativeBackground } from './components/DecorativeBackground'
 import { AuthPage } from './pages/auth/AuthPage'
+import type { Role } from './pages/auth/copy'
+import { OfficerPage } from './pages/officer/OfficerPage'
+import { OfficerProfilePage } from './pages/officer/OfficerProfilePage'
+import { OfficerHelplinePage } from './pages/officer/OfficerHelplinePage'
 import { Sidebar } from './components/Sidebar'
 import { MobileHeader } from './components/MobileHeader'
 import { Hero } from './components/Hero'
@@ -16,11 +20,14 @@ import type { TabId } from './data'
 
 const AUTH_KEY = 'sevanest-auth'
 
-function readAuth(): boolean {
+/** Persists which role is signed in (UI-only mock): returns the stored role,
+ *  or null when nobody is signed in. */
+function readAuthRole(): Role | null {
   try {
-    return localStorage.getItem(AUTH_KEY) === '1'
+    const v = localStorage.getItem(AUTH_KEY)
+    return v === 'citizen' || v === 'officer' ? v : null
   } catch {
-    return false
+    return null
   }
 }
 
@@ -28,14 +35,16 @@ export default function App() {
   const [tab, setTab] = useState<TabId>('overview')
   const { theme, toggle } = useTheme()
   /* UI-only mock gate: the AuthPage signs the demo session in/out locally. */
-  const [authed, setAuthed] = useState<boolean>(readAuth)
+  const [authed, setAuthed] = useState<boolean>(() => readAuthRole() !== null)
+  const [role, setRole] = useState<Role>(() => readAuthRole() ?? 'citizen')
 
-  const signIn = () => {
+  const signIn = (r: Role) => {
     try {
-      localStorage.setItem(AUTH_KEY, '1')
+      localStorage.setItem(AUTH_KEY, r)
     } catch {
       /* storage unavailable — session still signs in */
     }
+    setRole(r)
     setAuthed(true)
   }
 
@@ -45,6 +54,7 @@ export default function App() {
     } catch {
       /* ignore */
     }
+    setRole('citizen')
     setAuthed(false)
     setTab('overview')
   }
@@ -80,6 +90,7 @@ export default function App() {
         theme={theme}
         onToggleTheme={toggleTheme}
         onSignOut={signOut}
+        role={role}
       />
       <Sidebar
         active={tab}
@@ -87,6 +98,7 @@ export default function App() {
         theme={theme}
         onToggleTheme={toggleTheme}
         onSignOut={signOut}
+        role={role}
       />
 
       <div className="relative z-10 lg:pl-[264px]">
@@ -96,17 +108,28 @@ export default function App() {
           key={tab}
           className="page-enter mx-auto w-full max-w-[1200px] px-5 py-8 sm:px-10 lg:px-12 lg:py-10"
         >
-          {tab === 'overview' && (
-            <>
-              <Hero />
-              <SchemesSection />
-              <ResolvedSection />
-            </>
-          )}
-          {tab === 'chat' && <ChatPage />}
-          {tab === 'profile' && <ProfilePage />}
-          {tab === 'schemes' && <CatalogPage />}
-          {tab === 'helpline' && <HelplinePage />}
+          {tab === 'overview' &&
+            /* Officers get their own desk view; the other tabs stay shared
+               for now — a glimpse, not a full staff workspace. */
+            (role === 'officer' ? (
+              <OfficerPage />
+            ) : (
+              <>
+                <Hero />
+                <SchemesSection />
+                <ResolvedSection />
+              </>
+            ))}
+          {tab === 'chat' && <ChatPage role={role} />}
+          {tab === 'profile' &&
+            (role === 'officer' ? <OfficerProfilePage /> : <ProfilePage />)}
+          {tab === 'schemes' && <CatalogPage role={role} />}
+          {tab === 'helpline' &&
+            (role === 'officer' ? (
+              <OfficerHelplinePage />
+            ) : (
+              <HelplinePage />
+            ))}
           <Footer />
         </main>
       </div>

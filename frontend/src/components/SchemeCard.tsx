@@ -2,7 +2,7 @@ import { ChevronRight } from 'lucide-react'
 import type { Scheme } from '../data'
 import { ILLUSTRATIONS } from './illustrations'
 
-const CARD_COLORS: Record<Scheme['color'], string> = {
+export const CARD_COLORS: Record<Scheme['color'], string> = {
   lavender: 'bg-card-lavender',
   olive: 'bg-card-olive',
   terracotta: 'bg-card-terracotta',

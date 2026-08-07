@@ -1,6 +1,9 @@
 import {
   Bug,
+  Cpu,
+  Database,
   FileText,
+  Headset,
   HeartHandshake,
   LayoutGrid,
   MessagesSquare,
@@ -159,9 +162,9 @@ export const complaints: Complaint[] = [
     ref: 'SR-1041',
     title: 'Water supply disruption',
     location: 'Durganagar, Block B',
-    time: 'yesterday',
+    time: '6 days ago',
     status: 'Under review',
-    days: 1,
+    days: 6,
   },
   {
     id: 'c3',
@@ -181,6 +184,243 @@ export const complaints: Complaint[] = [
     status: 'Open',
     days: 0,
   },
+]
+
+/* ── Officer (staff) desk ────────────────────────────────── */
+
+export const officer = {
+  name: 'Rajiv Das',
+  initials: 'RD',
+  designation: 'Block Officer · Uluberia-I',
+}
+
+/* Stats shown in the officer hero */
+
+export const officerStats = [
+  { value: '7', label: 'reports to review' },
+  { value: '2', label: 'escalations due' },
+  { value: '9 in 10', label: 'resolved on time' },
+]
+
+/* Pending queue on the officer desk — flat pastel cards like the
+   citizen scheme grid (design.md §6), but the label reads urgency. */
+
+export interface OfficerQueueItem {
+  id: string
+  title: string
+  tag: string
+  ref: string
+  location: string
+  due: string
+  color: CardColor
+  illustration: IllustrationKey
+}
+
+export const officerQueue: OfficerQueueItem[] = [
+  {
+    id: 'q1',
+    title: 'Water supply disruption',
+    tag: 'Civic',
+    ref: 'SR-1041',
+    location: 'Durganagar, Block B',
+    due: 'Day 6 of 7',
+    color: 'terracotta',
+    illustration: 'spiral',
+  },
+  {
+    id: 'q2',
+    title: 'Harassment at ration shop',
+    tag: 'Ration',
+    ref: 'SR-1044',
+    location: 'Fuleswar Ration Depot',
+    due: 'Day 2 of 7',
+    color: 'mauve',
+    illustration: 'coins',
+  },
+  {
+    id: 'q3',
+    title: 'Ration card not renewed',
+    tag: 'Ration',
+    ref: 'SR-1056',
+    location: 'Ward 3',
+    due: 'Day 5 of 7',
+    color: 'olive',
+    illustration: 'leaf',
+  },
+  {
+    id: 'q4',
+    title: 'Drain overflow near school',
+    tag: 'Civic',
+    ref: 'SR-1053',
+    location: 'Ward 8',
+    due: 'Day 4 of 7',
+    color: 'lavender',
+    illustration: 'health',
+  },
+  {
+    id: 'q5',
+    title: 'PM-Kisan payment not credited',
+    tag: 'Welfare',
+    ref: 'SR-1052',
+    location: 'Durganagar',
+    due: 'Day 1 of 7',
+    color: 'sage',
+    illustration: 'sun',
+  },
+  {
+    id: 'q6',
+    title: 'Anganwadi ration missing',
+    tag: 'ICDS',
+    ref: 'SR-1055',
+    location: 'Ward 9',
+    due: 'Day 3 of 7',
+    color: 'khaki',
+    illustration: 'flower',
+  },
+]
+
+/* Case log — open, under review and resolved, all on record */
+
+export const officerCases: Complaint[] = [
+  {
+    id: 'o1',
+    ref: 'SR-1038',
+    title: 'Street light outage',
+    location: 'Ward 12, College Road',
+    time: '2 days ago',
+    status: 'Resolved',
+    days: 3,
+  },
+  {
+    id: 'o2',
+    ref: 'SR-1024',
+    title: 'Mid-day meal quality',
+    location: 'Purba Para Primary School',
+    time: '5 days ago',
+    status: 'Resolved',
+    days: 5,
+  },
+  {
+    id: 'o3',
+    ref: 'SR-1051',
+    title: 'Road pothole at bazaar crossing',
+    location: 'Ward 7',
+    time: '4 days ago',
+    status: 'Resolved',
+    days: 4,
+  },
+  {
+    id: 'o4',
+    ref: 'SR-1047',
+    title: 'Old-age pension not credited',
+    location: 'Durganagar',
+    time: 'yesterday',
+    status: 'Under review',
+    days: 1,
+  },
+]
+
+/* ── Officer profile (My profile tab) ────────────────────── */
+
+export const officerProfile = {
+  employment: [
+    { label: 'Employee ID', value: 'BLK-ULB-142' },
+    { label: 'Designation', value: 'Block Officer' },
+    { label: 'Department', value: 'Rural Development' },
+    { label: 'Reporting to', value: 'District Magistrate, Howrah' },
+    { label: 'Joined', value: 'July 2021' },
+  ],
+  posting: [
+    { label: 'Block', value: 'Uluberia-I' },
+    { label: 'District', value: 'Howrah, West Bengal' },
+    { label: 'Villages covered', value: '47' },
+    { label: 'Households', value: '31,200' },
+    { label: 'Service window', value: '7 days' },
+  ],
+  contact: [
+    { label: 'Official email', value: 'rajiv.das@howrah.gov.in' },
+    { label: 'Office phone', value: '033 2661 4200' },
+    { label: 'Mobile', value: '+91 98300 11242' },
+  ],
+}
+
+export const officerAccess = [
+  { label: 'Verify scheme applications', granted: true },
+  { label: 'Assign & resolve reports', granted: true },
+  { label: 'Escalate to district desk', granted: true },
+  { label: 'View citizen identifiers', granted: false },
+]
+
+export const officerPerformance = [
+  { label: 'Cases closed this month', value: '14', pct: 100 },
+  { label: 'Resolved on time', value: '93%', pct: 93 },
+  { label: 'Reports on desk now', value: '7', pct: 70 },
+]
+
+/* ── Officer catalog stats (Scheme catalog tab) — how many
+   applications per scheme are waiting in the block ──────── */
+
+export const officerSchemeStats: Record<
+  string,
+  { applications: number; pending: number; overdue: number }
+> = {
+  pmay: { applications: 312, pending: 41, overdue: 3 },
+  nfsa: { applications: 489, pending: 22, overdue: 1 },
+  pmkisan: { applications: 356, pending: 12, overdue: 0 },
+  ayushman: { applications: 268, pending: 9, overdue: 0 },
+  kanyashree: { applications: 143, pending: 5, overdue: 0 },
+  sukanya: { applications: 97, pending: 3, overdue: 0 },
+  ujjwala: { applications: 204, pending: 17, overdue: 2 },
+  mgnrega: { applications: 521, pending: 0, overdue: 0 },
+  jandhan: { applications: 612, pending: 6, overdue: 0 },
+  matru: { applications: 88, pending: 4, overdue: 0 },
+  fasal: { applications: 176, pending: 8, overdue: 1 },
+  ignoaps: { applications: 131, pending: 15, overdue: 1 },
+}
+
+/* ── Officer helpline (Helpline tab) — internal support ─── */
+
+export const officerSupportContacts: EmergencyContact[] = [
+  { label: 'District IT cell', number: '1800-345-2211', icon: Cpu },
+  { label: 'Data officer — Howrah', number: '1800-345-2212', icon: Database },
+  { label: 'Escalation desk', number: '1800-345-2213', icon: Headset },
+]
+
+export const officerEscalationSteps = [
+  {
+    title: 'Receive & assign',
+    text: 'Reports land on your desk with a reference ID. Assign a field officer within 24 hours.',
+  },
+  {
+    title: 'Review & resolve',
+    text: 'Verify the facts, coordinate with the department, and close the case with a public note.',
+  },
+  {
+    title: 'Auto-escalate at day 7',
+    text: 'Anything unresolved after 7 days moves to the district desk — no action needed from you.',
+  },
+]
+
+/* ── Officer Sahayak chat ────────────────────────────────── */
+
+export const officerIntroMessages: Record<string, string> = {
+  bn: 'শুভ সকাল, Officer Rajiv! 🙏 আমি Sahayak — আপনার ডেস্ক সহকারী। বিচারাধীন রিপোর্ট, যাচাইয়ের অপেক্ষায় থাকা আবেদন বা জরুরি ডেডলাইন — যেকোনো কিছু জিজ্ঞেস করুন।',
+  hi: 'सुप्रभात, Officer Rajiv! 🙏 मैं Sahayak हूँ — आपका डेस्क सहायक। लंबित रिपोर्ट, सत्यापन के लिए आवेदन या डेडलाइन — कुछ भी पूछिए।',
+  en: "Good morning, Officer Rajiv! 🙏 I'm Sahayak, your desk assistant. Ask about pending reports, applications to verify, or escalation deadlines.",
+}
+
+export const officerQuickReplies = [
+  'Which reports are due today?',
+  'How many applications await review?',
+  "Show this week's escalations",
+  'My block statistics',
+]
+
+export const officerBotReplies = [
+  'You have 7 reports on your desk. SR-1041 (Water supply) is Day 6 of 7 — it escalates to the district desk tomorrow if unresolved. 🔔',
+  '21 applications await your verification in Uluberia-I. The oldest is a PM Awas Yojana case filed 11 days ago. 🧾',
+  'This week: 14 cases closed, 93% on time, 0 escalations. Your block is the fastest in Howrah district. 📈',
+  'Reminder: the 7-day window starts the moment a report is filed. Citizens get an SMS at every step — assign early, resolve faster. 📲',
 ]
 
 /* ── Sahayak chat ────────────────────────────────────────── */

@@ -1,5 +1,6 @@
 import { LogOut } from 'lucide-react'
-import { tabs, user, type TabId } from '../data'
+import { tabs, user, officer, type TabId } from '../data'
+import type { Role } from '../pages/auth/copy'
 import type { Theme } from '../hooks/useTheme'
 import { useNavPillSettle } from '../hooks/useNavPillSettle'
 import { Logo } from './Logo'
@@ -11,6 +12,7 @@ interface MobileHeaderProps {
   theme: Theme
   onToggleTheme: () => void
   onSignOut: () => void
+  role: Role
 }
 
 export function MobileHeader({
@@ -19,7 +21,9 @@ export function MobileHeader({
   theme,
   onToggleTheme,
   onSignOut,
+  role,
 }: MobileHeaderProps) {
+  const identity = role === 'officer' ? officer : user
   /* Active pill settles in on tab switch (Animations.md §3.2). */
   const scope = useNavPillSettle(active)
 
@@ -42,7 +46,7 @@ export function MobileHeader({
           </button>
           <div className="relative">
             <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-brand-orange to-[#c97a45] text-xs font-semibold text-white">
-              {user.initials}
+              {identity.initials}
             </div>
             <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-canvas bg-brand-mint" />
           </div>

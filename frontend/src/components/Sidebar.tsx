@@ -1,5 +1,6 @@
 import { ChevronDown, ChevronRight, LogOut } from 'lucide-react'
-import { tabs, user, type Tab, type TabId } from '../data'
+import { tabs, user, officer, type Tab, type TabId } from '../data'
+import type { Role } from '../pages/auth/copy'
 import type { Theme } from '../hooks/useTheme'
 import { useNavPillSettle } from '../hooks/useNavPillSettle'
 import { Logo } from './Logo'
@@ -11,6 +12,7 @@ interface SidebarProps {
   theme: Theme
   onToggleTheme: () => void
   onSignOut: () => void
+  role: Role
 }
 
 export function Sidebar({
@@ -19,7 +21,9 @@ export function Sidebar({
   theme,
   onToggleTheme,
   onSignOut,
+  role,
 }: SidebarProps) {
+  const identity = role === 'officer' ? officer : user
   /* Nav pill settles softly into its new position on tab switch (§3.2). */
   const scope = useNavPillSettle(active)
 
@@ -37,15 +41,17 @@ export function Sidebar({
       <div className="mt-7 flex items-center gap-3 rounded-2xl border border-border-subtle px-3 py-2.5">
         <div className="relative shrink-0">
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-brand-orange to-[#c97a45] text-[13px] font-semibold text-white">
-            {user.initials}
+            {identity.initials}
           </div>
           <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-surface bg-brand-mint" />
         </div>
         <div className="min-w-0 flex-1">
           <p className="truncate text-[15px] font-semibold text-ink-900">
-            {user.name}
+            {identity.name}
           </p>
-          <p className="truncate text-xs text-ink-400">Citizen · verified</p>
+          <p className="truncate text-xs text-ink-400">
+            {role === 'officer' ? officer.designation : 'Citizen · verified'}
+          </p>
         </div>
         <ChevronDown className="h-4 w-4 shrink-0 text-ink-400" />
       </div>

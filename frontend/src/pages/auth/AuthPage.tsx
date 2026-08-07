@@ -22,8 +22,8 @@ import { copy, LANGS, type Lang, type Mode, type Role } from './copy'
 interface AuthPageProps {
   theme: Theme
   onToggleTheme: () => void
-  /** UI-only mock: called when the citizen or officer flow "completes". */
-  onSignIn: () => void
+  /** UI-only mock: called with the selected role when its flow "completes". */
+  onSignIn: (role: Role) => void
 }
 
 const OTP_LENGTH = 6
@@ -172,7 +172,7 @@ export function AuthPage({ theme, onToggleTheme, onSignIn }: AuthPageProps) {
     /* All six digits in for the first time → sign in (UI-only mock). */
     const wasComplete = otp.every(Boolean)
     if (!wasComplete && next.every(Boolean)) {
-      window.setTimeout(onSignIn, 180)
+      window.setTimeout(() => onSignIn(role), 180)
       return
     }
 
@@ -192,7 +192,7 @@ export function AuthPage({ theme, onToggleTheme, onSignIn }: AuthPageProps) {
       setError(t.errOtp)
       return
     }
-    onSignIn()
+    onSignIn(role)
   }
 
   const resend = () => {
@@ -206,7 +206,7 @@ export function AuthPage({ theme, onToggleTheme, onSignIn }: AuthPageProps) {
       setError(t.errLogin)
       return
     }
-    onSignIn()
+    onSignIn('officer')
   }
 
   const onFormSubmit = (e: FormEvent) => e.preventDefault()
@@ -643,7 +643,7 @@ export function AuthPage({ theme, onToggleTheme, onSignIn }: AuthPageProps) {
                   continue to the homepage without signing in. */}
               <button
                 type="button"
-                onClick={onSignIn}
+                onClick={() => onSignIn(role)}
                 className="mt-3 block w-full text-center text-[13px] text-ink-400 underline decoration-ink-400/30 underline-offset-4 transition-colors duration-150 hover:text-ink-900 focus-visible:outline-2 focus-visible:outline-brand-orange"
               >
                 {t.continueAnyway}
