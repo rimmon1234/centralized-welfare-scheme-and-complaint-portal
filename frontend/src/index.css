@@ -135,6 +135,21 @@
   animation: page-enter 220ms ease-out;
 }
 
+/* Auth form steps (mobile → OTP, role/mode switches): soft 8px slide-in */
+@keyframes step-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.step-enter {
+  animation: step-enter 200ms ease-out;
+}
+
 /* Ambient doodle drift — slow breathing of the background line-art (§3.3) */
 @keyframes doodle-drift {
   0% {

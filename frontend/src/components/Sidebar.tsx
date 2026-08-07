@@ -1,4 +1,4 @@
-import { ChevronDown, ChevronRight } from 'lucide-react'
+import { ChevronDown, ChevronRight, LogOut } from 'lucide-react'
 import { tabs, user, type Tab, type TabId } from '../data'
 import type { Theme } from '../hooks/useTheme'
 import { useNavPillSettle } from '../hooks/useNavPillSettle'
@@ -10,9 +10,16 @@ interface SidebarProps {
   onSelect: (id: TabId) => void
   theme: Theme
   onToggleTheme: () => void
+  onSignOut: () => void
 }
 
-export function Sidebar({ active, onSelect, theme, onToggleTheme }: SidebarProps) {
+export function Sidebar({
+  active,
+  onSelect,
+  theme,
+  onToggleTheme,
+  onSignOut,
+}: SidebarProps) {
   /* Nav pill settles softly into its new position on tab switch (§3.2). */
   const scope = useNavPillSettle(active)
 
@@ -54,8 +61,16 @@ export function Sidebar({ active, onSelect, theme, onToggleTheme }: SidebarProps
         ))}
       </nav>
 
-      <div className="mt-auto">
+      <div className="mt-auto flex flex-col gap-4">
         <PromoCard />
+        <button
+          onClick={onSignOut}
+          title="Sign out (demo)"
+          className="flex w-full items-center gap-2.5 rounded-[14px] px-4 py-2.5 text-left text-[13px] font-medium text-ink-400 transition-colors duration-150 hover:bg-canvas hover:text-ink-900 focus-visible:outline-2 focus-visible:outline-brand-orange"
+        >
+          <LogOut className="h-4 w-4 shrink-0" strokeWidth={1.5} />
+          Sign out
+        </button>
       </div>
     </aside>
   )
