@@ -3,11 +3,13 @@ import { BadgeCheck, Check, Clock3, Pencil } from 'lucide-react'
 import { PageHeader } from '../components/PageHeader'
 import { Toggle } from '../components/Toggle'
 import { profile, user, type ProfileRow } from '../data'
+import { useReveal } from '../hooks/useReveal'
 
 export function ProfilePage() {
   const [share, setShare] = useState(true)
   const verified = profile.documents.filter((d) => d.status === 'Verified').length
   const total = profile.documents.length
+  const scope = useReveal<HTMLDivElement>()
 
   return (
     <div>
@@ -16,17 +18,35 @@ export function ProfilePage() {
         subtitle="This profile powers every eligibility match you see. Keep it accurate and your documents verified."
       />
 
-      <div className="mt-6 grid grid-cols-1 gap-5 lg:grid-cols-3">
+      <div
+        ref={scope}
+        className="mt-6 grid grid-cols-1 gap-5 lg:grid-cols-3"
+      >
         <div className="flex flex-col gap-5">
-          <ProfileSummary share={share} onToggleShare={() => setShare(!share)} />
-          <EligibilityFactors />
+          <div data-reveal>
+            <ProfileSummary
+              share={share}
+              onToggleShare={() => setShare(!share)}
+            />
+          </div>
+          <div data-reveal>
+            <EligibilityFactors />
+          </div>
         </div>
 
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:col-span-2">
-          <InfoCard title="Personal details" rows={profile.personal} />
-          <InfoCard title="Address & household" rows={profile.household} />
-          <IncomeCard />
-          <DocumentsCard verified={verified} total={total} />
+          <div data-reveal>
+            <InfoCard title="Personal details" rows={profile.personal} />
+          </div>
+          <div data-reveal>
+            <InfoCard title="Address & household" rows={profile.household} />
+          </div>
+          <div data-reveal>
+            <IncomeCard />
+          </div>
+          <div data-reveal>
+            <DocumentsCard verified={verified} total={total} />
+          </div>
         </div>
       </div>
     </div>
@@ -41,7 +61,7 @@ function ProfileSummary({
   onToggleShare: () => void
 }) {
   return (
-    <div className="rounded-2xl border border-border-subtle bg-surface p-6 shadow-soft">
+    <div className="h-full rounded-2xl border border-border-subtle bg-surface p-6 shadow-soft">
       <div className="relative inline-block">
         <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-brand-orange to-[#c97a45] text-xl font-semibold text-white">
           {user.initials}
@@ -80,7 +100,7 @@ function ProfileSummary({
 
 function EligibilityFactors() {
   return (
-    <div className="rounded-2xl border border-border-subtle bg-surface p-6 shadow-soft">
+    <div className="h-full rounded-2xl border border-border-subtle bg-surface p-6 shadow-soft">
       <h3 className="font-display text-base font-semibold text-ink-900">
         What powers your matches
       </h3>
@@ -112,7 +132,7 @@ function InfoCard({
   rows: ProfileRow[]
 }) {
   return (
-    <div className="rounded-2xl border border-border-subtle bg-surface p-6 shadow-soft">
+    <div className="h-full rounded-2xl border border-border-subtle bg-surface p-6 shadow-soft">
       <CardTitle title={title} />
       <dl className="mt-4 flex flex-col gap-3">
         {rows.map((row) => (
@@ -134,7 +154,7 @@ function InfoCard({
 function IncomeCard() {
   const pct = Math.min(100, Math.round((1.4 / 2) * 100))
   return (
-    <div className="rounded-2xl border border-border-subtle bg-surface p-6 shadow-soft">
+    <div className="h-full rounded-2xl border border-border-subtle bg-surface p-6 shadow-soft">
       <CardTitle title="Occupation & income" />
       <dl className="mt-4 flex flex-col gap-3">
         {profile.occupation.map((row) => (
@@ -157,7 +177,8 @@ function IncomeCard() {
         </div>
         <div className="mt-2 h-2 overflow-hidden rounded-full bg-canvas">
           <div
-            className="h-full rounded-full bg-brand-orange transition-all duration-500"
+            data-progress
+            className="h-full rounded-full bg-brand-orange"
             style={{ width: `${pct}%` }}
           />
         </div>
@@ -178,7 +199,7 @@ function DocumentsCard({
 }) {
   const pct = Math.round((verified / total) * 100)
   return (
-    <div className="rounded-2xl border border-border-subtle bg-surface p-6 shadow-soft">
+    <div className="h-full rounded-2xl border border-border-subtle bg-surface p-6 shadow-soft">
       <div className="flex items-center justify-between">
         <h3 className="font-display text-base font-semibold text-ink-900">
           Documents checklist
@@ -189,7 +210,8 @@ function DocumentsCard({
       </div>
       <div className="mt-4 h-2 overflow-hidden rounded-full bg-canvas">
         <div
-          className="h-full rounded-full bg-brand-mint transition-all duration-500"
+          data-progress
+          className="h-full rounded-full bg-brand-mint"
           style={{ width: `${pct}%` }}
         />
       </div>

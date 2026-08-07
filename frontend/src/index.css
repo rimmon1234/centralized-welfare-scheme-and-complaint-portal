@@ -117,3 +117,74 @@
     animation-duration: 0.01ms !important;
   }
 }
+
+/* ── Motion utilities (Animations.md) ─────────────────────── */
+
+/* Tab transition: re-mounting <main key={tab}> fades + slides in (§3.2) */
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.page-enter {
+  animation: page-enter 220ms ease-out;
+}
+
+/* Ambient doodle drift — slow breathing of the background line-art (§3.3) */
+@keyframes doodle-drift {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(9px, -7px) rotate(3deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+}
+.doodle-drift {
+  animation: doodle-drift 32s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* Chat bubble entrance (iMessage-style pop, §3.2) */
+@keyframes bubble-pop {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.bubble-pop {
+  animation: bubble-pop 180ms ease-out;
+}
+
+/* Search / complaint bar focus ring pulse (§3.1) */
+@keyframes search-pulse {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-brand-orange) 50%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 12px transparent;
+  }
+}
+.search-pulse:focus-within {
+  animation: search-pulse 900ms ease-out 2;
+}
+
+/* Theme-switch crossfade (§4 Phase 2): applied transiently while the theme
+   class flips, so background/border/text colors ease instead of snapping. */
+.theme-fade-active,
+.theme-fade-active * {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-duration: 300ms;
+  transition-timing-function: ease;
+}

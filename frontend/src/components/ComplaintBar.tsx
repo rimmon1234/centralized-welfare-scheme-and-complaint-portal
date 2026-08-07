@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState, type RefObject } from 'react'
 import { Mic, ShieldCheck } from 'lucide-react'
+import { gsap } from '../lib/animations'
+import { useReducedMotion } from '../hooks/useReducedMotion'
 
 interface ComplaintBarProps {
   query: string
@@ -14,6 +16,18 @@ export function ComplaintBar({
 }: ComplaintBarProps) {
   const [filed, setFiled] = useState(false)
   const timer = useRef<number | undefined>(undefined)
+  const reducedMotion = useReducedMotion()
+
+  /* Success pill slides down into place (Animations.md §3.1). */
+  useEffect(() => {
+    if (!filed || reducedMotion) return
+    gsap.from('[data-success-pill]', {
+      y: -8,
+      opacity: 0,
+      duration: 0.35,
+      ease: 'power2.out',
+    })
+  }, [filed, reducedMotion])
 
   const fileComplaint = () => {
     if (filed) return
@@ -26,7 +40,7 @@ export function ComplaintBar({
 
   return (
     <div className="mt-5">
-      <div className="flex items-center gap-1.5 rounded-[20px] border border-border-subtle bg-surface p-1.5 shadow-soft">
+      <div className="search-pulse flex items-center gap-1.5 rounded-[20px] border border-border-subtle bg-surface p-1.5 shadow-soft">
         <input
           ref={inputRef}
           value={query}
@@ -60,6 +74,7 @@ export function ComplaintBar({
 
       {filed && (
         <p
+          data-success-pill
           role="status"
           className="mt-3 inline-flex items-center gap-2 rounded-full bg-brand-mint/20 px-4 py-2 text-[13px] font-medium text-ink-900"
         >

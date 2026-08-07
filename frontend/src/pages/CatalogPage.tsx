@@ -1,6 +1,19 @@
-import { useMemo, useState } from 'react'
+import {
+  useMemo,
+  useRef,
+  useState,
+  type ChangeEvent,
+  type MouseEvent,
+} from 'react'
 import { Search } from 'lucide-react'
 import { PageHeader } from '../components/PageHeader'
+import {
+  Flip,
+  gsap,
+  pressChip,
+  prefersReducedMotion,
+  useGSAP,
+} from '../lib/animations'
 import {
   catalogCategories,
   catalogSchemes,
@@ -25,6 +38,80 @@ const filters: CategoryFilter[] = ['All', ...catalogCategories]
 export function CatalogPage() {
   const [query, setQuery] = useState('')
   const [category, setCategory] = useState<CategoryFilter>('All')
+  const scope = useRef<HTMLDivElement>(null)
+  const flipState = useRef<Flip.FlipState | null>(null)
+
+  /* Snapshot the current card layout BEFORE the grid re-renders, so the
+     FLIP transition can smoothly move cards into their new positions. */
+  const captureFlip = () => {
+    if (prefersReducedMotion()) return
+    const cards = gsap.utils.toArray<HTMLElement>(
+      '.catalog-card',
+      scope.current as HTMLElement,
+    )
+    if (cards.length) flipState.current = Flip.getState(cards)
+  }
+
+  const handleQuery = (e: ChangeEvent<HTMLInputElement>) => {
+    captureFlip()
+    setQuery(e.target.value)
+  }
+
+  const handleCategory = (filter: CategoryFilter) => {
+    return (e: MouseEvent<HTMLButtonElement>) => {
+      pressChip(e.currentTarget)
+      captureFlip()
+      setCategory(filter)
+    }
+  }
+
+  /* One-time entrance stagger, mount-only (Animations.md §3.2). Kept separate
+     from the FLIP context so a filter change can never interrupt it. */
+  useGSAP(
+    () => {
+      const mm = gsap.matchMedia()
+      mm.add('(prefers-reduced-motion: reduce)', () => {})
+      mm.add('(prefers-reduced-motion: no-preference)', () => {
+        const cards = gsap.utils.toArray<HTMLElement>(
+          '.catalog-card',
+          scope.current as HTMLElement,
+        )
+        if (cards.length) {
+          gsap.from(cards, {
+            y: 16,
+            opacity: 0,
+            duration: 0.4,
+            ease: 'power2.out',
+            stagger: 0.04,
+            /* Return cards to pure CSS state afterwards so nothing lingers. */
+            clearProps: 'transform,opacity',
+          })
+        }
+      })
+    },
+    { scope },
+  )
+
+  /* FLIP-style grid transition on filter/search changes. */
+  useGSAP(
+    () => {
+      const mm = gsap.matchMedia()
+      mm.add('(prefers-reduced-motion: reduce)', () => {})
+      mm.add('(prefers-reduced-motion: no-preference)', () => {
+        if (flipState.current) {
+          const state = flipState.current
+          flipState.current = null
+          Flip.from(state, {
+            duration: 0.45,
+            ease: 'power1.inOut',
+            absolute: true,
+            scale: true,
+          })
+        }
+      })
+    },
+    { scope, dependencies: [query, category] },
+  )
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
@@ -48,14 +135,14 @@ export function CatalogPage() {
       />
 
       {/* Search */}
-      <div className="mt-6 flex items-center gap-2 rounded-[20px] border border-border-subtle bg-surface p-1.5 shadow-soft">
+      <div className="search-pulse mt-6 flex items-center gap-2 rounded-[20px] border border-border-subtle bg-surface p-1.5 shadow-soft">
         <Search
           className="ml-3 h-4 w-4 shrink-0 text-ink-400"
           strokeWidth={1.5}
         />
         <input
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={handleQuery}
           placeholder="Search schemes, benefits or categories…"
           aria-label="Search schemes"
           className="w-full min-w-0 flex-1 bg-transparent px-2 py-3 text-[15px] text-ink-900 placeholder:text-ink-400 focus:outline-none"
@@ -67,7 +154,7 @@ export function CatalogPage() {
         {filters.map((filter) => (
           <button
             key={filter}
-            onClick={() => setCategory(filter)}
+            onClick={handleCategory(filter)}
             aria-pressed={category === filter}
             className={`rounded-full px-4 py-2 text-[13px] font-medium transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-brand-orange ${
               category === filter
@@ -81,7 +168,10 @@ export function CatalogPage() {
       </div>
 
       {/* Grid */}
-      <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
+      <div
+        ref={scope}
+        className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2"
+      >
         {filtered.map((scheme) => (
           <CatalogCard key={scheme.id} scheme={scheme} />
         ))}
@@ -97,7 +187,7 @@ export function CatalogPage() {
 
 function CatalogCard({ scheme }: { scheme: CatalogScheme }) {
   return (
-    <div className="flex flex-col rounded-2xl border border-border-subtle bg-surface p-6 shadow-soft transition-all duration-150 ease-out hover:-translate-y-0.5 hover:shadow-lift">
+    <div className="catalog-card flex flex-col rounded-2xl border border-border-subtle bg-surface p-6 shadow-soft transition-[box-shadow,translate] duration-150 ease-out hover:-translate-y-0.5 hover:shadow-lift">
       <div className="flex items-center gap-2">
         <span
           className={`h-2.5 w-2.5 rounded-full ${CATEGORY_DOTS[scheme.category]}`}

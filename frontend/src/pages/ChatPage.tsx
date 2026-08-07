@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Mic, Send } from 'lucide-react'
 import { PageHeader } from '../components/PageHeader'
+import { gsap, useGSAP } from '../lib/animations'
 import {
   botReplies,
   catalogSchemes,
@@ -46,6 +47,59 @@ export function ChatPage() {
   const idRef = useRef(3)
   const scrollRef = useRef<HTMLDivElement>(null)
   const timersRef = useRef<number[]>([])
+  const lastAnimated = useRef(0)
+
+  /* iMessage-style bubble pops (Animations.md §3.2): every newly appended
+     message scales/fades in; its embedded scheme card slides up after. */
+  useGSAP(
+    () => {
+      const mm = gsap.matchMedia()
+      mm.add('(prefers-reduced-motion: reduce)', () => {})
+      mm.add('(prefers-reduced-motion: no-preference)', () => {
+        // scrollRef is the bottom anchor; its parent is the scroll container.
+        const container = scrollRef.current?.parentElement
+        if (!container) return
+        const fresh = gsap.utils
+          .toArray<HTMLElement>('[data-msg-id]', container)
+          .filter((el) => Number(el.dataset.msgId) > lastAnimated.current)
+        if (!fresh.length) return
+
+        gsap.fromTo(
+          fresh,
+          { scale: 0.94, y: 8, opacity: 0 },
+          {
+            scale: 1,
+            y: 0,
+            opacity: 1,
+            duration: 0.2,
+            ease: 'power2.out',
+            stagger: 0.04,
+            overwrite: true,
+          },
+        )
+        fresh.forEach((el) => {
+          const card = el.querySelector<HTMLElement>('[data-scheme-card]')
+          if (card) {
+            gsap.fromTo(
+              card,
+              { y: 14, opacity: 0 },
+              {
+                y: 0,
+                opacity: 1,
+                duration: 0.3,
+                ease: 'power2.out',
+                delay: 0.08,
+                overwrite: true,
+              },
+            )
+          }
+        })
+
+        lastAnimated.current = Number(fresh[fresh.length - 1].dataset.msgId)
+      })
+    },
+    { scope: scrollRef, dependencies: [messages] },
+  )
 
   const schedule = (fn: () => void, ms: number) => {
     timersRef.current.push(window.setTimeout(fn, ms))
@@ -155,7 +209,11 @@ export function ChatPage() {
           {messages.map((message) => (
             <MessageBubble key={message.id} message={message} />
           ))}
-          {typing && <TypingBubble />}
+          {typing && (
+            <div className="bubble-pop">
+              <TypingBubble />
+            </div>
+          )}
           <div ref={scrollRef} />
         </div>
 
@@ -221,7 +279,7 @@ function MessageBubble({ message }: { message: ChatMessage }) {
   const isUser = message.role === 'user'
   if (isUser) {
     return (
-      <div className="flex justify-end">
+      <div data-msg-id={message.id} className="flex justify-end">
         <p className="max-w-[85%] rounded-2xl rounded-br-md bg-brand-navy px-4 py-3 text-[15px] leading-relaxed text-navy-contrast sm:max-w-[70%]">
           {message.text}
         </p>
@@ -229,7 +287,7 @@ function MessageBubble({ message }: { message: ChatMessage }) {
     )
   }
   return (
-    <div className="flex max-w-[88%] flex-col sm:max-w-[75%]">
+    <div data-msg-id={message.id} className="flex max-w-[88%] flex-col sm:max-w-[75%]">
       <div className="flex items-start gap-3">
         <BotAvatar />
         <p className="rounded-2xl rounded-bl-md border border-border-subtle bg-canvas/60 px-4 py-3 text-[15px] leading-relaxed text-ink-900">
@@ -237,7 +295,7 @@ function MessageBubble({ message }: { message: ChatMessage }) {
         </p>
       </div>
       {message.schemeId && (
-        <div className="ml-11 mt-2">
+        <div data-scheme-card className="ml-11 mt-2">
           <SchemeSuggestion schemeId={message.schemeId} />
         </div>
       )}

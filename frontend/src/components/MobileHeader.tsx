@@ -1,5 +1,6 @@
 import { tabs, user, type TabId } from '../data'
 import type { Theme } from '../hooks/useTheme'
+import { useNavPillSettle } from '../hooks/useNavPillSettle'
 import { Logo } from './Logo'
 import { ThemeToggle } from './ThemeToggle'
 
@@ -16,8 +17,14 @@ export function MobileHeader({
   theme,
   onToggleTheme,
 }: MobileHeaderProps) {
+  /* Active pill settles in on tab switch (Animations.md §3.2). */
+  const scope = useNavPillSettle(active)
+
   return (
-    <header className="sticky top-0 z-30 border-b border-border-subtle bg-canvas/85 backdrop-blur lg:hidden">
+    <header
+      ref={scope}
+      className="sticky top-0 z-30 border-b border-border-subtle bg-canvas/85 backdrop-blur lg:hidden"
+    >
       <div className="flex items-center justify-between px-5 py-3">
         <Logo />
         <div className="flex items-center gap-2">

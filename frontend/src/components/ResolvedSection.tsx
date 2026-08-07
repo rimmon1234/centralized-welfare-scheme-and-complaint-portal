@@ -5,6 +5,7 @@ import {
   Clock3,
 } from 'lucide-react'
 import { complaints, type Complaint, type Status } from '../data'
+import { useReveal } from '../hooks/useReveal'
 
 const STATUS_STYLES: Record<
   Status,
@@ -28,8 +29,9 @@ const STATUS_STYLES: Record<
 }
 
 export function ResolvedSection() {
+  const scope = useReveal<HTMLElement>()
   return (
-    <section className="mt-10 lg:mt-12">
+    <section ref={scope} className="mt-10 lg:mt-12">
       <div className="flex items-end justify-between gap-4">
         <div>
           <h2 className="font-display text-[22px] font-semibold text-ink-900">
@@ -47,7 +49,9 @@ export function ResolvedSection() {
 
       <ul className="mt-5 flex flex-col gap-3">
         {complaints.map((complaint) => (
-          <ComplaintRow key={complaint.id} complaint={complaint} />
+          <li data-reveal key={complaint.id}>
+            <ComplaintRow complaint={complaint} />
+          </li>
         ))}
       </ul>
     </section>
@@ -60,13 +64,13 @@ function ComplaintRow({ complaint }: { complaint: Complaint }) {
   const resolved = complaint.status === 'Resolved'
 
   return (
-    <li>
-      <button
-        className={`group flex w-full items-center gap-4 rounded-2xl border border-border-subtle bg-surface p-4 text-left shadow-soft transition-all duration-150 ease-out hover:-translate-y-0.5 hover:shadow-lift focus-visible:outline-2 focus-visible:outline-brand-orange sm:p-5 ${
-          resolved ? 'opacity-80' : ''
-        }`}
-      >
+    <button
+      className={`group flex w-full items-center gap-4 rounded-2xl border border-border-subtle bg-surface p-4 text-left shadow-soft transition-all duration-150 ease-out hover:-translate-y-0.5 hover:shadow-lift focus-visible:outline-2 focus-visible:outline-brand-orange sm:p-5 ${
+        resolved ? 'opacity-80' : ''
+      }`}
+    >
         <span
+          data-pop={resolved ? '' : undefined}
           className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${
             resolved
               ? 'bg-brand-mint/20 text-[#3d7d6b] dark:text-[#7fd1bb]'
@@ -97,7 +101,6 @@ function ComplaintRow({ complaint }: { complaint: Complaint }) {
         </span>
 
         <ArrowRight className="h-4 w-4 shrink-0 text-ink-400 transition-transform duration-150 group-hover:translate-x-0.5" />
-      </button>
-    </li>
+    </button>
   )
 }

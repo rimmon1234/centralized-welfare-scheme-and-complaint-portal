@@ -17,6 +17,18 @@ export default function App() {
   const [tab, setTab] = useState<TabId>('overview')
   const { theme, toggle } = useTheme()
 
+  /* Theme crossfade (Animations.md §4 Phase 2): let colors ease for ~300ms
+     while the `dark` class flips, then remove the transitional class. */
+  const toggleTheme = () => {
+    const root = document.documentElement
+    root.classList.add('theme-fade-active')
+    window.setTimeout(
+      () => root.classList.remove('theme-fade-active'),
+      350,
+    )
+    toggle()
+  }
+
   return (
     <div className="min-h-screen bg-canvas font-sans text-ink-900">
       <DecorativeBackground />
@@ -25,17 +37,22 @@ export default function App() {
         active={tab}
         onSelect={setTab}
         theme={theme}
-        onToggleTheme={toggle}
+        onToggleTheme={toggleTheme}
       />
       <Sidebar
         active={tab}
         onSelect={setTab}
         theme={theme}
-        onToggleTheme={toggle}
+        onToggleTheme={toggleTheme}
       />
 
       <div className="relative z-10 lg:pl-[264px]">
-        <main className="mx-auto w-full max-w-[1200px] px-5 py-8 sm:px-10 lg:px-12 lg:py-10">
+        {/* key={tab} re-mounts the content per tab so the page-enter
+            transition plays on every switch (Animations.md §3.2) */}
+        <main
+          key={tab}
+          className="page-enter mx-auto w-full max-w-[1200px] px-5 py-8 sm:px-10 lg:px-12 lg:py-10"
+        >
           {tab === 'overview' && (
             <>
               <Hero />

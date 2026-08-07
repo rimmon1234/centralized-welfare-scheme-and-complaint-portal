@@ -23,10 +23,10 @@ export interface Tab {
 
 export const tabs: Tab[] = [
   { id: 'overview', label: 'Overview', icon: LayoutGrid },
-  { id: 'chat', label: 'Sahayak chat', icon: MessagesSquare },
-  { id: 'profile', label: 'My profile', icon: UserRound },
   { id: 'schemes', label: 'Scheme catalog', icon: FileText },
   { id: 'helpline', label: 'Helpline', icon: Phone },
+  { id: 'chat', label: 'Sahayak chat', icon: MessagesSquare },
+  { id: 'profile', label: 'My profile', icon: UserRound },
 ]
 
 /* ── Demo citizen ────────────────────────────────────────── */

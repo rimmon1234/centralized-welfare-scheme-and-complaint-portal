@@ -1,6 +1,7 @@
 import { ChevronDown, ChevronRight } from 'lucide-react'
 import { tabs, user, type Tab, type TabId } from '../data'
 import type { Theme } from '../hooks/useTheme'
+import { useNavPillSettle } from '../hooks/useNavPillSettle'
 import { Logo } from './Logo'
 import { ThemeToggle } from './ThemeToggle'
 
@@ -12,8 +13,14 @@ interface SidebarProps {
 }
 
 export function Sidebar({ active, onSelect, theme, onToggleTheme }: SidebarProps) {
+  /* Nav pill settles softly into its new position on tab switch (§3.2). */
+  const scope = useNavPillSettle(active)
+
   return (
-    <aside className="fixed inset-y-0 left-0 z-30 hidden w-[264px] flex-col border-r border-border-subtle bg-surface px-5 py-6 lg:flex">
+    <aside
+      ref={scope}
+      className="fixed inset-y-0 left-0 z-30 hidden w-[264px] flex-col border-r border-border-subtle bg-surface px-5 py-6 lg:flex"
+    >
       <div className="flex items-center justify-between">
         <Logo />
         <ThemeToggle theme={theme} onToggle={onToggleTheme} />

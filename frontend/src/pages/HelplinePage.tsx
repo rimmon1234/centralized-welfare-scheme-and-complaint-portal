@@ -1,7 +1,10 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState, type MouseEvent } from 'react'
 import { MapPin, Paperclip, ShieldCheck } from 'lucide-react'
 import { PageHeader } from '../components/PageHeader'
 import { Toggle } from '../components/Toggle'
+import { gsap, pressChip } from '../lib/animations'
+import { useReveal } from '../hooks/useReveal'
+import { useReducedMotion } from '../hooks/useReducedMotion'
 import {
   emergencyContacts,
   helplineSteps,
@@ -16,6 +19,14 @@ export function HelplinePage() {
   const [anonymous, setAnonymous] = useState(true)
   const [submitted, setSubmitted] = useState(false)
   const [submittedCategory, setSubmittedCategory] = useState<string>(reportCategories[0])
+  const scope = useReveal<HTMLDivElement>()
+  const bannerRef = useRef<HTMLParagraphElement>(null)
+  const reducedMotion = useReducedMotion()
+
+  const pickCategory = (option: string) => (e: MouseEvent<HTMLButtonElement>) => {
+    pressChip(e.currentTarget)
+    setCategory(option)
+  }
 
   const submit = () => {
     if (!desc.trim()) return
@@ -24,6 +35,17 @@ export function HelplinePage() {
     setDesc('')
     setEvidence(false)
   }
+
+  /* Success banner slides down after a report is filed (Animations.md §3.2). */
+  useEffect(() => {
+    if (!submitted || reducedMotion) return
+    gsap.from(bannerRef.current, {
+      y: -8,
+      opacity: 0,
+      duration: 0.35,
+      ease: 'power2.out',
+    })
+  }, [submitted, reducedMotion])
 
   return (
     <div>
@@ -44,7 +66,7 @@ export function HelplinePage() {
         </p>
       </div>
 
-      <div className="mt-6 grid grid-cols-1 gap-5 lg:grid-cols-3">
+      <div ref={scope} className="mt-6 grid grid-cols-1 gap-5 lg:grid-cols-3">
         {/* Report form */}
         <div className="rounded-[24px] border border-border-subtle bg-surface p-6 shadow-soft sm:p-8 lg:col-span-2">
           <h3 className="font-display text-xl font-semibold text-ink-900">
@@ -59,7 +81,7 @@ export function HelplinePage() {
             {reportCategories.map((option) => (
               <button
                 key={option}
-                onClick={() => setCategory(option)}
+                onClick={pickCategory(option)}
                 aria-pressed={category === option}
                 className={`rounded-full px-4 py-2 text-[13px] font-medium transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-brand-orange ${
                   category === option
@@ -143,6 +165,7 @@ export function HelplinePage() {
 
           {submitted && (
             <p
+              ref={bannerRef}
               role="status"
               className="mt-4 flex items-start gap-2 rounded-2xl bg-brand-mint/20 px-4 py-3 text-[13px] font-medium leading-relaxed text-ink-900"
             >
@@ -159,7 +182,10 @@ export function HelplinePage() {
 
         {/* Right rail */}
         <div className="flex flex-col gap-5">
-          <div className="rounded-2xl border border-border-subtle bg-surface p-6 shadow-soft">
+          <div
+            data-reveal
+            className="rounded-2xl border border-border-subtle bg-surface p-6 shadow-soft"
+          >
             <h3 className="font-display text-base font-semibold text-ink-900">
               Emergency contacts
             </h3>
@@ -189,7 +215,10 @@ export function HelplinePage() {
             <p className="mt-3 text-xs text-ink-400">Tap to call · works 24×7</p>
           </div>
 
-          <div className="rounded-2xl border border-border-subtle bg-surface p-6 shadow-soft">
+          <div
+            data-reveal
+            className="rounded-2xl border border-border-subtle bg-surface p-6 shadow-soft"
+          >
             <h3 className="font-display text-base font-semibold text-ink-900">
               How it works
             </h3>
@@ -215,7 +244,7 @@ export function HelplinePage() {
             </ol>
           </div>
 
-          <div className="rounded-2xl bg-brand-mint/15 p-6">
+          <div data-reveal className="rounded-2xl bg-brand-mint/15 p-6">
             <p className="text-[13px] font-semibold text-ink-900">
               Why this matters
             </p>
