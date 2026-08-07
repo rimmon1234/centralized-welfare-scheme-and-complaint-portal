@@ -10,11 +10,11 @@ export function PageHeader({
   return (
     <div className="flex flex-wrap items-end justify-between gap-4">
       <div>
-        <h1 className="font-display text-3xl font-semibold tracking-tight text-ink-900">
+        <h1 className="font-display text-3xl font-semibold tracking-tight text-ink-900 max-md:text-[22px]">
           {title}
         </h1>
         {subtitle && (
-          <p className="mt-1.5 max-w-xl text-sm leading-relaxed text-ink-400">
+          <p className="mt-1.5 max-w-xl text-sm leading-relaxed text-ink-400 max-md:mt-1 max-md:text-[13px]">
             {subtitle}
           </p>
         )}

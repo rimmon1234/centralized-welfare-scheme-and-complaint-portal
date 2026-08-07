@@ -180,7 +180,7 @@ export function OfficerBlockMap() {
   return (
     <div className="grid grid-cols-1 gap-5 lg:grid-cols-[1.45fr_1fr]">
       {/* ── Map card ──────────────────────────────────────── */}
-      <div className="rounded-2xl border border-border-subtle bg-surface p-5 shadow-soft sm:p-6">
+      <div className="rounded-2xl border border-border-subtle bg-surface p-5 shadow-soft md:p-6 max-md:p-4">
         <div className="flex items-center justify-between gap-3">
           <div>
             <h3 className="font-display text-base font-semibold text-ink-900">
@@ -480,7 +480,7 @@ export function OfficerBlockMap() {
       </div>
 
       {/* ── Right rail: block pulse → ward drill-down ─────── */}
-      <div className="flex flex-col rounded-2xl border border-border-subtle bg-surface p-6 shadow-soft">
+      <div className="flex flex-col rounded-2xl border border-border-subtle bg-surface p-6 shadow-soft max-md:p-4">
         {selected ? (
           /* Ward drill-down */
           <>

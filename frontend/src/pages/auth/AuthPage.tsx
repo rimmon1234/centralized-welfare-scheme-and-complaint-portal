@@ -249,12 +249,12 @@ export function AuthPage({ theme, onToggleTheme, onSignIn }: AuthPageProps) {
       <div className="w-full max-w-[1000px]">
         <div
           data-auth="card"
-          className="grid overflow-hidden rounded-[28px] border border-border-subtle bg-surface shadow-lift lg:grid-cols-[5fr_6fr]"
+          className="grid overflow-hidden rounded-[28px] border border-border-subtle bg-surface shadow-lift lg:grid-cols-[5fr_6fr] max-md:rounded-[20px]"
         >
           {/* ── Brand panel (sage → white hero band, design.md §2) ─────── */}
           <aside
             data-auth="brand"
-            className="hero-band relative flex flex-col justify-between gap-8 overflow-hidden px-7 py-8 sm:px-10 lg:py-10"
+            className="hero-band relative flex flex-col justify-between gap-8 overflow-hidden px-7 py-8 md:px-10 lg:py-10 max-md:gap-6 max-md:px-5 max-md:py-6"
           >
             <div className="flex items-center justify-between gap-3">
               <Logo />
@@ -264,7 +264,7 @@ export function AuthPage({ theme, onToggleTheme, onSignIn }: AuthPageProps) {
             </div>
 
             <div>
-              <h1 className="font-display text-[28px] font-semibold leading-[1.2] text-ink-900 sm:text-4xl">
+              <h1 className="font-display text-[28px] font-semibold leading-[1.2] text-ink-900 sm:text-4xl max-md:text-[22px]">
                 {t.brandTitle}
               </h1>
               <p className="mt-3 max-w-sm text-[14px] leading-relaxed text-ink-700">
@@ -346,7 +346,7 @@ export function AuthPage({ theme, onToggleTheme, onSignIn }: AuthPageProps) {
           {/* ── Form panel ─────────────────────────────────────────────── */}
           <section
             data-auth="formcol"
-            className="flex flex-col justify-center px-7 py-8 sm:px-10 lg:py-10"
+            className="flex flex-col justify-center px-7 py-8 md:px-10 lg:py-10 max-md:px-5 max-md:py-6"
           >
             <div className="mx-auto w-full max-w-[420px]">
               {/* Role switcher — Citizen default, Officer for staff */}

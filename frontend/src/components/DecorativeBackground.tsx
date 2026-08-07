@@ -19,7 +19,7 @@ export function DecorativeBackground({
       {/* Concentric spiral — top-left (slow ambient drift, Animations.md §3.3) */}
       <svg
         viewBox="0 0 240 240"
-        className="doodle-drift absolute -left-12 -top-14 h-72 w-72 text-brand-mint opacity-20 dark:opacity-10"
+        className="doodle-drift absolute -left-12 -top-14 h-72 w-72 text-brand-mint opacity-20 dark:opacity-10 max-md:-left-10 max-md:-top-12 max-md:h-44 max-md:w-44 max-md:opacity-10"
         style={{ animationDuration: '38s' }}
         fill="none"
         stroke="currentColor"
@@ -32,7 +32,7 @@ export function DecorativeBackground({
       {/* Loose ribbon squiggle — top-right */}
       <svg
         viewBox="0 0 320 130"
-        className="doodle-drift absolute -right-8 top-20 h-36 w-80 text-brand-mint opacity-15 dark:opacity-10"
+        className="doodle-drift absolute -right-8 top-20 h-36 w-80 text-brand-mint opacity-15 dark:opacity-10 max-md:-right-10 max-md:top-16 max-md:h-20 max-md:w-44 max-md:opacity-10"
         style={{ animationDuration: '45s', animationDelay: '-12s' }}
         fill="none"
         stroke="currentColor"
@@ -46,7 +46,7 @@ export function DecorativeBackground({
       {/* Small squiggle — bottom-left */}
       <svg
         viewBox="0 0 160 80"
-        className="doodle-drift absolute bottom-12 left-10 h-16 w-36 text-brand-mint opacity-15 dark:opacity-10"
+        className="doodle-drift absolute bottom-12 left-10 h-16 w-36 text-brand-mint opacity-15 dark:opacity-10 max-md:bottom-8 max-md:left-6 max-md:h-12 max-md:w-24 max-md:opacity-10"
         style={{ animationDuration: '29s', animationDelay: '-5s' }}
         fill="none"
         stroke="currentColor"

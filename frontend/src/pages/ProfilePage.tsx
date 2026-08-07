@@ -20,7 +20,7 @@ export function ProfilePage() {
 
       <div
         ref={scope}
-        className="mt-6 grid grid-cols-1 gap-5 lg:grid-cols-3"
+        className="mt-6 grid grid-cols-1 gap-5 lg:grid-cols-3 max-md:mt-5 max-md:gap-4"
       >
         <div className="flex flex-col gap-5">
           <div data-reveal>
@@ -34,7 +34,7 @@ export function ProfilePage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:col-span-2">
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:col-span-2">
           <div data-reveal>
             <InfoCard title="Personal details" rows={profile.personal} />
           </div>
@@ -61,7 +61,7 @@ function ProfileSummary({
   onToggleShare: () => void
 }) {
   return (
-    <div className="h-full rounded-2xl border border-border-subtle bg-surface p-6 shadow-soft">
+    <div className="h-full rounded-2xl border border-border-subtle bg-surface p-6 shadow-soft max-md:p-4">
       <div className="relative inline-block">
         <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-brand-orange to-[#c97a45] text-xl font-semibold text-white">
           {user.initials}
@@ -100,7 +100,7 @@ function ProfileSummary({
 
 function EligibilityFactors() {
   return (
-    <div className="h-full rounded-2xl border border-border-subtle bg-surface p-6 shadow-soft">
+    <div className="h-full rounded-2xl border border-border-subtle bg-surface p-6 shadow-soft max-md:p-4">
       <h3 className="font-display text-base font-semibold text-ink-900">
         What powers your matches
       </h3>
@@ -132,7 +132,7 @@ function InfoCard({
   rows: ProfileRow[]
 }) {
   return (
-    <div className="h-full rounded-2xl border border-border-subtle bg-surface p-6 shadow-soft">
+    <div className="h-full rounded-2xl border border-border-subtle bg-surface p-6 shadow-soft max-md:p-4">
       <CardTitle title={title} />
       <dl className="mt-4 flex flex-col gap-3">
         {rows.map((row) => (
@@ -154,7 +154,7 @@ function InfoCard({
 function IncomeCard() {
   const pct = Math.min(100, Math.round((1.4 / 2) * 100))
   return (
-    <div className="h-full rounded-2xl border border-border-subtle bg-surface p-6 shadow-soft">
+    <div className="h-full rounded-2xl border border-border-subtle bg-surface p-6 shadow-soft max-md:p-4">
       <CardTitle title="Occupation & income" />
       <dl className="mt-4 flex flex-col gap-3">
         {profile.occupation.map((row) => (
@@ -199,7 +199,7 @@ function DocumentsCard({
 }) {
   const pct = Math.round((verified / total) * 100)
   return (
-    <div className="h-full rounded-2xl border border-border-subtle bg-surface p-6 shadow-soft">
+    <div className="h-full rounded-2xl border border-border-subtle bg-surface p-6 shadow-soft max-md:p-4">
       <div className="flex items-center justify-between">
         <h3 className="font-display text-base font-semibold text-ink-900">
           Documents checklist

@@ -19,7 +19,7 @@ export function OfficerHelplinePage() {
       />
 
       {/* Service window banner */}
-      <div className="mt-6 flex items-center gap-3 rounded-2xl bg-brand-mint/20 px-5 py-4">
+      <div className="mt-6 flex items-center gap-3 rounded-2xl bg-brand-mint/20 px-5 py-4 max-md:mt-5 max-md:px-4 max-md:py-3">
         <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-navy text-brand-orange dark:bg-[#16151b]">
           <LifeBuoy className="h-4 w-4" strokeWidth={1.75} />
         </span>
@@ -35,7 +35,7 @@ export function OfficerHelplinePage() {
         <div className="flex flex-col gap-5 lg:col-span-2">
           <div
             data-reveal
-            className="rounded-2xl border border-border-subtle bg-surface p-6 shadow-soft"
+            className="rounded-2xl border border-border-subtle bg-surface p-6 shadow-soft max-md:p-4"
           >
             <h3 className="font-display text-base font-semibold text-ink-900">
               Internal support
@@ -71,7 +71,7 @@ export function OfficerHelplinePage() {
           {/* Escalation chain */}
           <div
             data-reveal
-            className="rounded-2xl border border-border-subtle bg-surface p-6 shadow-soft"
+            className="rounded-2xl border border-border-subtle bg-surface p-6 shadow-soft max-md:p-4"
           >
             <h3 className="font-display text-base font-semibold text-ink-900">
               How resolution works
@@ -103,7 +103,7 @@ export function OfficerHelplinePage() {
         <div className="flex flex-col gap-5">
           <div
             data-reveal
-            className="rounded-2xl border border-border-subtle bg-surface p-6 shadow-soft"
+            className="rounded-2xl border border-border-subtle bg-surface p-6 shadow-soft max-md:p-4"
           >
             <h3 className="font-display text-base font-semibold text-ink-900">
               Your desk today
@@ -131,7 +131,7 @@ export function OfficerHelplinePage() {
 
           <div
             data-reveal
-            className="rounded-2xl border border-border-subtle bg-surface p-6 shadow-soft"
+            className="rounded-2xl border border-border-subtle bg-surface p-6 shadow-soft max-md:p-4"
           >
             <h3 className="font-display text-base font-semibold text-ink-900">
               Emergency contacts
@@ -151,7 +151,7 @@ export function OfficerHelplinePage() {
                       <span className="flex-1 text-[13px] font-medium text-ink-900">
                         {contact.label}
                       </span>
-                      <span className="font-display text-lg font-semibold text-ink-900">
+                      <span className="font-display text-lg font-semibold text-ink-900 max-md:text-base">
                         {contact.number}
                       </span>
                     </a>

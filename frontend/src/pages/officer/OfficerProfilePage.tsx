@@ -15,7 +15,7 @@ export function OfficerProfilePage() {
 
       <div
         ref={scope}
-        className="mt-6 grid grid-cols-1 gap-5 lg:grid-cols-3"
+        className="mt-6 grid grid-cols-1 gap-5 lg:grid-cols-3 max-md:mt-5 max-md:gap-4"
       >
         <div className="flex flex-col gap-5">
           <div data-reveal>
@@ -26,7 +26,7 @@ export function OfficerProfilePage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:col-span-2">
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:col-span-2">
           <div data-reveal>
             <InfoCard title="Employment details" rows={officerProfile.employment} />
           </div>
@@ -47,7 +47,7 @@ export function OfficerProfilePage() {
 
 function OfficerSummary() {
   return (
-    <div className="h-full rounded-2xl border border-border-subtle bg-surface p-6 shadow-soft">
+    <div className="h-full rounded-2xl border border-border-subtle bg-surface p-6 shadow-soft max-md:p-4">
       <div className="relative inline-block">
         <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-brand-orange to-[#c97a45] text-xl font-semibold text-white">
           {officer.initials}
@@ -82,7 +82,7 @@ function OfficerSummary() {
 
 function PerformanceCard() {
   return (
-    <div className="h-full rounded-2xl border border-border-subtle bg-surface p-6 shadow-soft">
+    <div className="h-full rounded-2xl border border-border-subtle bg-surface p-6 shadow-soft max-md:p-4">
       <h3 className="font-display text-base font-semibold text-ink-900">
         This month
       </h3>
@@ -120,7 +120,7 @@ function InfoCard({
   rows: { label: string; value: string }[]
 }) {
   return (
-    <div className="h-full rounded-2xl border border-border-subtle bg-surface p-6 shadow-soft">
+    <div className="h-full rounded-2xl border border-border-subtle bg-surface p-6 shadow-soft max-md:p-4">
       <h3 className="font-display text-base font-semibold text-ink-900">
         {title}
       </h3>
@@ -143,7 +143,7 @@ function InfoCard({
 
 function AccessCard() {
   return (
-    <div className="h-full rounded-2xl border border-border-subtle bg-surface p-6 shadow-soft">
+    <div className="h-full rounded-2xl border border-border-subtle bg-surface p-6 shadow-soft max-md:p-4">
       <h3 className="font-display text-base font-semibold text-ink-900">
         Access &amp; permissions
       </h3>
