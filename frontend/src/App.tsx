@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { DecorativeBackground } from './components/DecorativeBackground'
 import { AuthPage } from './pages/auth/AuthPage'
 import type { Role } from './pages/auth/copy'
@@ -8,6 +8,7 @@ import { OfficerProfilePage } from './pages/officer/OfficerProfilePage'
 import { OfficerHelplinePage } from './pages/officer/OfficerHelplinePage'
 import { Sidebar } from './components/Sidebar'
 import { MobileHeader } from './components/MobileHeader'
+import { MobileTabBar } from './components/MobileTabBar'
 import { Hero } from './components/Hero'
 import { SchemesSection } from './components/SchemesSection'
 import { ResolvedSection } from './components/ResolvedSection'
@@ -72,6 +73,14 @@ export default function App() {
     toggle()
   }
 
+  /* Tab switches on touch devices land at the top of the new page — desktop
+     (fine-pointer) behaviour is untouched. */
+  useEffect(() => {
+    if (window.matchMedia('(pointer: coarse)').matches) {
+      window.scrollTo({ top: 0 })
+    }
+  }, [tab])
+
   if (!authed) {
     return (
       <div className="min-h-screen bg-canvas font-sans text-ink-900">
@@ -85,14 +94,7 @@ export default function App() {
     <div className="min-h-screen bg-canvas font-sans text-ink-900">
       <DecorativeBackground />
 
-      <MobileHeader
-        active={tab}
-        onSelect={setTab}
-        theme={theme}
-        onToggleTheme={toggleTheme}
-        onSignOut={signOut}
-        role={role}
-      />
+      <MobileHeader theme={theme} onToggleTheme={toggleTheme} role={role} />
       <Sidebar
         active={tab}
         onSelect={setTab}
@@ -101,13 +103,14 @@ export default function App() {
         onSignOut={signOut}
         role={role}
       />
+      <MobileTabBar active={tab} onSelect={setTab} role={role} />
 
       <div className="relative z-10 lg:pl-[264px]">
         {/* key={tab} re-mounts the content per tab so the page-enter
             transition plays on every switch (Animations.md §3.2) */}
         <main
           key={tab}
-          className="page-enter mx-auto w-full max-w-[1200px] px-5 py-8 sm:px-10 lg:px-12 lg:py-10"
+          className="page-enter mx-auto w-full max-w-[1200px] px-5 py-8 md:px-10 lg:px-12 lg:py-10 max-md:px-4 max-md:pb-28"
         >
           {tab === 'overview' &&
             /* Officers get their own desk view; the other tabs stay shared
@@ -116,7 +119,7 @@ export default function App() {
               <OfficerPage />
             ) : (
               <>
-                <Hero />
+                <Hero onReport={() => setTab('helpline')} />
                 <SchemesSection />
                 <ResolvedSection />
               </>
@@ -132,7 +135,7 @@ export default function App() {
             ) : (
               <HelplinePage />
             ))}
-          <Footer />
+          <Footer onSignOut={signOut} />
         </main>
       </div>
     </div>

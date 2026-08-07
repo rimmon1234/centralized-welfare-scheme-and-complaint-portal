@@ -214,17 +214,19 @@ export function ChatPage({ role }: { role: Role }) {
 
   return (
     <div>
-      <PageHeader
-        title="Sahayak chat"
-        subtitle={
-          isOfficer
-            ? 'Your desk assistant — ask about pending reports, applications to review, or deadlines. In your language, by text or voice.'
-            : 'Ask anything in your own language — by text or voice. No jargon, no forms-speak.'
-        }
-      />
+      <div className="max-md:hidden">
+        <PageHeader
+          title="Sahayak chat"
+          subtitle={
+            isOfficer
+              ? 'Your desk assistant — ask about pending reports, applications to review, or deadlines. In your language, by text or voice.'
+              : 'Ask anything in your own language — by text or voice. No jargon, no forms-speak.'
+          }
+        />
+      </div>
 
-      {/* Language switcher */}
-      <div className="mt-5 flex flex-wrap items-center gap-2">
+      {/* Language switcher (desktop / tablet) */}
+      <div className="mt-5 flex flex-wrap items-center gap-2 max-md:hidden">
         {languages.map((lang) => (
           <button
             key={lang.id}
@@ -244,9 +246,34 @@ export function ChatPage({ role }: { role: Role }) {
         </span>
       </div>
 
-      {/* Chat card */}
-      <div className="mt-4 flex flex-col rounded-[24px] border border-border-subtle bg-surface shadow-soft">
-        <div className="flex h-[460px] flex-col gap-4 overflow-y-auto p-5 sm:p-6">
+      {/* Chat card. Below md it becomes one fixed, viewport-filling surface
+          (between the sticky top bar at 67px and the bottom tab bar) so the
+          messages pane is the only scroll area — no nested page scroll. */}
+      <div className="mt-4 flex flex-col rounded-[24px] border border-border-subtle bg-surface shadow-soft max-md:fixed max-md:inset-x-0 max-md:top-[var(--mobile-topbar-h)] max-md:bottom-0 max-md:z-10 max-md:mt-0 max-md:rounded-none max-md:border-0 max-md:shadow-none">
+        {/* Language switcher — slim bar at the top of the chat on mobile */}
+        <div className="hidden items-center justify-between gap-2 border-b border-border-subtle px-3 py-2 max-md:flex">
+          <div className="flex items-center gap-1.5" role="group" aria-label="Language">
+            {languages.map((lang) => (
+              <button
+                key={lang.id}
+                onClick={() => switchLanguage(lang.id)}
+                aria-pressed={language === lang.id}
+                className={`rounded-full px-3 py-1.5 text-xs font-medium transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-brand-orange ${
+                  language === lang.id
+                    ? 'bg-brand-navy text-navy-contrast'
+                    : 'border border-border-subtle bg-surface text-ink-700 hover:text-ink-900'
+                }`}
+              >
+                {lang.label}
+              </button>
+            ))}
+          </div>
+          <span className="shrink-0 text-[10px] text-ink-400">
+            Voice supported · read aloud
+          </span>
+        </div>
+
+        <div className="flex h-[460px] flex-col gap-4 overflow-y-auto p-5 md:p-6 max-md:h-auto max-md:min-h-0 max-md:flex-1 max-md:gap-3 max-md:p-3.5 max-md:overflow-x-hidden">
           {messages.map((message) => (
             <MessageBubble
               key={message.id}
@@ -262,26 +289,27 @@ export function ChatPage({ role }: { role: Role }) {
           <div ref={scrollRef} />
         </div>
 
-        {/* Quick replies */}
-        <div className="flex flex-wrap gap-2 border-t border-border-subtle px-5 py-3 sm:px-6">
+        {/* Quick replies — swipeable row on mobile, kept compact so the
+            composer doesn't crowd the messages */}
+        <div className="flex flex-wrap gap-2 border-t border-border-subtle px-5 py-3 sm:px-6 max-md:flex-nowrap max-md:overflow-x-auto max-md:px-3 max-md:py-2 max-md:no-scrollbar">
           {(isOfficer ? officerQuickReplies : quickReplies).map((reply) => (
             <button
               key={reply}
               onClick={() => sendQuick(reply)}
-              className="rounded-full border border-border-subtle bg-canvas/60 px-3.5 py-1.5 text-xs font-medium text-ink-700 transition-colors duration-150 hover:border-brand-orange/60 hover:text-ink-900 focus-visible:outline-2 focus-visible:outline-brand-orange"
+              className="shrink-0 rounded-full border border-border-subtle bg-canvas/60 px-3.5 py-1.5 text-xs font-medium text-ink-700 transition-colors duration-150 hover:border-brand-orange/60 hover:text-ink-900 focus-visible:outline-2 focus-visible:outline-brand-orange max-md:min-h-9 max-md:px-3 max-md:text-[11px]"
             >
               {reply}
             </button>
           ))}
         </div>
 
-        {/* Input bar */}
-        <div className="border-t border-border-subtle p-3 sm:p-4">
-          <div className="flex items-center gap-2 rounded-[20px] border border-border-subtle bg-canvas/50 p-1.5">
+        {/* Input bar — bottom padding clears the fixed tab bar on mobile */}
+        <div className="border-t border-border-subtle p-3 sm:p-4 max-md:px-3 max-md:py-2.5 max-md:pb-[calc(env(safe-area-inset-bottom)+3.75rem)]">
+          <div className="flex items-center gap-2 rounded-[20px] border border-border-subtle bg-canvas/50 p-1.5 max-md:gap-1.5 max-md:rounded-[16px] max-md:p-1">
             <button
               onClick={startVoice}
               aria-label="Speak your question"
-              className={`flex shrink-0 items-center justify-center rounded-[12px] p-3 transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-brand-orange ${
+              className={`flex shrink-0 items-center justify-center rounded-[12px] p-3 transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-brand-orange max-md:p-2.5 ${
                 listening
                   ? 'bg-brand-orange text-white dark:text-[#16151b]'
                   : 'text-ink-700 hover:bg-surface'
@@ -297,12 +325,12 @@ export function ChatPage({ role }: { role: Role }) {
                 listening ? 'Listening… speak now' : 'Type your question…'
               }
               aria-label="Your question"
-              className="w-full min-w-0 flex-1 bg-transparent px-3 text-[15px] text-ink-900 placeholder:text-ink-400 focus:outline-none"
+              className="w-full min-w-0 flex-1 bg-transparent px-3 text-[15px] text-ink-900 placeholder:text-ink-400 focus:outline-none max-md:text-[13px]"
             />
             <button
               onClick={send}
               aria-label="Send message"
-              className="flex shrink-0 items-center justify-center gap-2 rounded-[14px] bg-brand-navy px-5 py-3 text-[13px] font-semibold uppercase tracking-[0.04em] text-navy-contrast transition-colors duration-150 hover:bg-[#2d2839] dark:hover:bg-[#d9d5cd] focus-visible:outline-2 focus-visible:outline-brand-orange"
+              className="flex shrink-0 items-center justify-center gap-2 rounded-[14px] bg-brand-navy px-5 py-3 text-[13px] font-semibold uppercase tracking-[0.04em] text-navy-contrast transition-colors duration-150 hover:bg-[#2d2839] dark:hover:bg-[#d9d5cd] focus-visible:outline-2 focus-visible:outline-brand-orange max-md:px-3.5 max-md:py-2"
             >
               <Send className="h-4 w-4" strokeWidth={1.75} />
               <span className="hidden sm:inline">Send</span>
@@ -382,7 +410,7 @@ function SchemeSuggestion({
   const scheme = catalogSchemes.find((s) => s.id === schemeId)
   if (!scheme) return null
   return (
-    <div className="w-72 rounded-2xl border border-border-subtle bg-surface p-4 shadow-soft">
+    <div className="w-72 rounded-2xl border border-border-subtle bg-surface p-4 shadow-soft max-md:max-w-[calc(100vw-5.625rem)]">
       <div className="flex items-center gap-2">
         <span className="h-2 w-2 rounded-full bg-brand-mint" />
         <p className="text-[11px] font-semibold uppercase tracking-wider text-ink-400">

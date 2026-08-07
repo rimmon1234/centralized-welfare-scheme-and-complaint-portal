@@ -1,82 +1,36 @@
-import { LogOut } from 'lucide-react'
-import { tabs, user, officer, type TabId } from '../data'
+import { officer, user } from '../data'
 import type { Role } from '../pages/auth/copy'
 import type { Theme } from '../hooks/useTheme'
-import { useNavPillSettle } from '../hooks/useNavPillSettle'
-import { Logo } from './Logo'
 import { ThemeToggle } from './ThemeToggle'
 
 interface MobileHeaderProps {
-  active: TabId
-  onSelect: (id: TabId) => void
   theme: Theme
   onToggleTheme: () => void
-  onSignOut: () => void
   role: Role
 }
 
-export function MobileHeader({
-  active,
-  onSelect,
-  theme,
-  onToggleTheme,
-  onSignOut,
-  role,
-}: MobileHeaderProps) {
-  const identity = role === 'officer' ? officer : user
-  const visibleTabs = tabs.filter((t) => role === 'officer' || !t.officerOnly)
-  /* Active pill settles in on tab switch (Animations.md §3.2). */
-  const scope = useNavPillSettle(active)
+/* Mobile plan §4: the top bar is minimal — location + greeting left, one or
+   two utility icons right. No logo wordmark on repeat visits (it lives on
+   the auth screen only); the bottom tab bar replaces the old pill row. */
+export function MobileHeader({ theme, onToggleTheme, role }: MobileHeaderProps) {
+  const isOfficer = role === 'officer'
+  const firstName = (isOfficer ? officer.name : user.name).split(' ')[0]
 
   return (
-    <header
-      ref={scope}
-      className="sticky top-0 z-30 border-b border-border-subtle bg-canvas/85 backdrop-blur lg:hidden"
-    >
-      <div className="flex items-center justify-between px-5 py-3">
-        <Logo />
-        <div className="flex items-center gap-2">
+    <header className="sticky top-0 z-30 border-b border-border-subtle bg-canvas/85 backdrop-blur lg:hidden">
+      <div className="flex items-center justify-between gap-3 px-4 py-2.5">
+        <div className="min-w-0">
+          <p className="truncate text-[11px] font-medium text-ink-400">
+            {isOfficer ? 'Uluberia-I Block Office' : 'Uluberia-I block'}
+          </p>
+          <h1 className="mt-0.5 truncate font-display text-xl font-bold leading-snug text-ink-900">
+            {isOfficer ? `Good morning, Officer ${firstName}` : `Hi, ${firstName}`}
+          </h1>
+        </div>
+        <div className="flex shrink-0 items-center">
           <ThemeToggle theme={theme} onToggle={onToggleTheme} />
-          <button
-            onClick={onSignOut}
-            aria-label="Sign out (demo)"
-            title="Sign out (demo)"
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-border-subtle bg-surface text-ink-700 shadow-soft transition-colors duration-150 hover:text-brand-orange focus-visible:outline-2 focus-visible:outline-brand-orange"
-          >
-            <LogOut className="h-4 w-4" strokeWidth={1.5} />
-          </button>
-          <div className="relative">
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-brand-orange to-[#c97a45] text-xs font-semibold text-white">
-              {identity.initials}
-            </div>
-            <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-canvas bg-brand-mint" />
-          </div>
         </div>
       </div>
-      <nav
-        className="flex gap-1.5 overflow-x-auto px-5 pb-3"
-        aria-label="Primary"
-      >
-        {visibleTabs.map((tab) => {
-          const Icon = tab.icon
-          const isActive = active === tab.id
-          return (
-            <button
-              key={tab.id}
-              onClick={() => onSelect(tab.id)}
-              aria-current={isActive ? 'page' : undefined}
-              className={`flex shrink-0 items-center gap-1.5 rounded-full px-3.5 py-2 text-[13px] font-medium transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-brand-orange ${
-                isActive
-                  ? 'bg-brand-navy text-navy-contrast'
-                  : 'text-ink-400 hover:bg-surface hover:text-ink-900'
-              }`}
-            >
-              <Icon className="h-4 w-4" strokeWidth={1.5} />
-              {tab.label}
-            </button>
-          )
-        })}
-      </nav>
     </header>
   )
 }

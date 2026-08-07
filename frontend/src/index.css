@@ -50,9 +50,23 @@
   );
 }
 
+/* Swipeable chip rows (mobile plan §4) stay scrollable but never show a
+   scrollbar — the rows are short and the gesture is discoverable. */
+@utility no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 @layer base {
   :root {
     color-scheme: light;
+    /* Rendered height of the mobile top bar (MobileHeader): 66px content +
+       1px border. The full-screen mobile chat card in ChatPage positions
+       itself below this — keep the two in sync. */
+    --mobile-topbar-h: 67px;
   }
   html {
     -webkit-font-smoothing: antialiased;

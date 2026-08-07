@@ -47,7 +47,7 @@ export function ComplaintBar({
           onChange={(e) => onQueryChange(e.target.value)}
           placeholder="Type a scheme name, or describe an issue — road, water, harassment…"
           aria-label="Search schemes or describe an issue"
-          className="w-full min-w-0 flex-1 bg-transparent px-4 py-3.5 text-[15px] text-ink-900 placeholder:text-ink-400 focus:outline-none"
+          className="w-full min-w-0 flex-1 bg-transparent px-4 py-3.5 text-[15px] text-ink-900 placeholder:text-ink-400 focus:outline-none max-md:px-3 max-md:py-3 max-md:text-[13px]"
         />
         <button
           type="button"
@@ -59,13 +59,13 @@ export function ComplaintBar({
         </button>
         <button
           onClick={fileComplaint}
-          className="shrink-0 rounded-[14px] bg-brand-navy px-6 py-3.5 text-[13px] font-semibold uppercase tracking-[0.04em] text-navy-contrast transition-colors duration-150 hover:bg-[#2d2839] dark:hover:bg-[#d9d5cd] focus-visible:outline-2 focus-visible:outline-brand-orange sm:px-8"
+          className="shrink-0 rounded-[14px] bg-brand-navy px-6 py-3.5 text-[13px] font-semibold uppercase tracking-[0.04em] text-navy-contrast transition-colors duration-150 hover:bg-[#2d2839] dark:hover:bg-[#d9d5cd] focus-visible:outline-2 focus-visible:outline-brand-orange md:px-8 max-md:px-4 max-md:py-3 max-md:normal-case max-md:tracking-normal"
         >
           File a complaint
         </button>
       </div>
 
-      <p className="mt-2.5 text-xs text-ink-400">
+      <p className="mt-2.5 text-xs text-ink-400 max-md:text-[11px]">
         Anonymous &amp; geotagged — your name is never shown to officials.{' '}
         <button className="font-medium text-brand-navy underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-brand-orange">
           How it works
