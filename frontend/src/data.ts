@@ -666,6 +666,7 @@ export interface CatalogScheme {
   id: string
   title: string
   category: CatalogCategory
+  tag?: string
   description: string
   benefit: string
   eligibility: string

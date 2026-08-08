@@ -11,10 +11,11 @@ export const CARD_COLORS: Record<Scheme['color'], string> = {
   khaki: 'bg-card-khaki',
 }
 
-export function SchemeCard({ scheme }: { scheme: Scheme }) {
-  const Illustration = ILLUSTRATIONS[scheme.illustration]
+export function SchemeCard({ scheme, onClick }: { scheme: Scheme; onClick?: () => void }) {
+  const Illustration = ILLUSTRATIONS[scheme.illustration] || ILLUSTRATIONS.spiral
   return (
     <button
+      onClick={onClick}
       className={`group relative flex h-full w-full min-h-44 flex-col overflow-hidden rounded-2xl p-6 text-left transition-all duration-150 ease-out hover:-translate-y-0.5 hover:shadow-lift focus-visible:outline-2 focus-visible:outline-brand-orange ${CARD_COLORS[scheme.color]} max-md:hidden`}
     >
       <span className="self-start rounded-full bg-white/25 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-white">
