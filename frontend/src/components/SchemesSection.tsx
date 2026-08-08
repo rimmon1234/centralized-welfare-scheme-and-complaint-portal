@@ -1,14 +1,12 @@
 import { useMemo, useRef, useState } from 'react'
-import { Minus, Plus } from 'lucide-react'
 import { schemes } from '../data'
 import { SchemeCard, CARD_COLORS } from './SchemeCard'
 import { ListRow } from './ListRow'
 import { ComplaintBar } from './ComplaintBar'
 import { useReveal } from '../hooks/useReveal'
 
-export function SchemesSection() {
+export function SchemesSection({ onOpenCatalog }: { onOpenCatalog?: () => void }) {
   const [query, setQuery] = useState('')
-  const [expanded, setExpanded] = useState(true)
   const inputRef = useRef<HTMLInputElement>(null)
   const scope = useReveal<HTMLElement>()
 
@@ -65,13 +63,7 @@ export function SchemesSection() {
         )}
 
         <div data-reveal>
-          <AddNewCard
-            expanded={expanded}
-            onToggle={() => {
-              setExpanded((v) => !v)
-              inputRef.current?.focus()
-            }}
-          />
+          <AddNewCard onOpenCatalog={onOpenCatalog} />
         </div>
       </div>
 
@@ -86,33 +78,23 @@ export function SchemesSection() {
   )
 }
 
-function AddNewCard({
-  expanded,
-  onToggle,
-}: {
-  expanded: boolean
-  onToggle: () => void
-}) {
+function AddNewCard({ onOpenCatalog }: { onOpenCatalog?: () => void }) {
   return (
     <>
       <button
-        onClick={onToggle}
+        onClick={onOpenCatalog}
         className="group flex h-full w-full min-h-44 flex-col rounded-2xl border border-border-subtle bg-surface p-6 text-left transition-all duration-150 ease-out hover:-translate-y-0.5 hover:shadow-lift focus-visible:outline-2 focus-visible:outline-brand-orange max-md:hidden"
       >
         <div className="flex items-start justify-between">
           <p className="text-[15px] font-semibold text-ink-900">
             Search all schemes
           </p>
-          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-border-subtle text-ink-700 transition-transform duration-150 group-hover:rotate-90">
-            {expanded ? (
-              <Minus className="h-4 w-4" strokeWidth={1.5} />
-            ) : (
-              <Plus className="h-4 w-4" strokeWidth={1.5} />
-            )}
+          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-border-subtle text-ink-700 transition-transform duration-150 group-hover:translate-x-1">
+            →
           </span>
         </div>
         <p className="mt-2 text-xs leading-relaxed text-ink-400">
-          Browse the full catalog or type a scheme name in the search bar below.
+          Browse the full dynamic catalog of 150+ government schemes.
         </p>
         <p className="mt-auto pt-4 text-xs font-medium text-brand-orange">
           Open catalog →
@@ -121,7 +103,7 @@ function AddNewCard({
 
       {/* Mobile: the same action as a compact row in the divided list. */}
       <button
-        onClick={onToggle}
+        onClick={onOpenCatalog}
         className="flex w-full items-center gap-3 px-3.5 py-3 text-left transition-colors duration-150 active:bg-canvas/70 focus-visible:outline-2 focus-visible:outline-brand-orange md:hidden"
       >
         <span className="min-w-0 flex-1">
@@ -129,15 +111,8 @@ function AddNewCard({
             Search all schemes
           </span>
           <span className="mt-0.5 block truncate text-[11px] text-ink-400">
-            Browse the full catalog or type a scheme name below.
+            Browse the full dynamic catalog of 150+ government schemes.
           </span>
-        </span>
-        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-border-subtle text-ink-700">
-          {expanded ? (
-            <Minus className="h-4 w-4" strokeWidth={1.5} />
-          ) : (
-            <Plus className="h-4 w-4" strokeWidth={1.5} />
-          )}
         </span>
         <span className="text-xs font-semibold text-brand-orange">Catalog →</span>
       </button>

@@ -120,7 +120,7 @@ export default function App() {
             ) : (
               <>
                 <Hero onReport={() => setTab('helpline')} />
-                <SchemesSection />
+                <SchemesSection onOpenCatalog={() => setTab('schemes')} />
                 <ResolvedSection />
               </>
             ))}

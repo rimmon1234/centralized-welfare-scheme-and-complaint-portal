@@ -1,0 +1,33 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Scheme {
+  id                String    @id @default(uuid())
+  externalId        String?   @map("external_id")
+  source            String    @default("system")
+  sourceUrl         String?   @map("source_url")
+  sourceLastUpdated DateTime? @map("source_last_updated")
+  
+  title             String
+  category          String
+  tag               String?
+  description       String    @db.Text
+  benefit           String
+  eligibility       String    @db.Text
+  isActive          Boolean   @default(true) @map("is_active")
+  applicationsCount Int       @default(0) @map("applications_count")
+  
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+
+  @@unique([source, externalId], name: "source_external_id")
+  @@index([category])
+  @@index([title])
+  @@map("schemes")
+}
