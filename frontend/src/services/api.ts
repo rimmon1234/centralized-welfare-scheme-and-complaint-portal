@@ -1,9 +1,11 @@
+// API Service Helper for Centralized Welfare Portal & AI Engine
+
 const API_BASE_URL = 'http://localhost:5000/api';
 
 export interface BackendScheme {
   id: string;
   externalId?: string;
-  source?: string;
+  source: string;
   sourceUrl?: string;
   title: string;
   category: string;
@@ -15,7 +17,7 @@ export interface BackendScheme {
   applicationsCount: number;
 }
 
-export interface FetchSchemesResponse {
+export interface FetchSchemesResult {
   schemes: BackendScheme[];
   count: number;
   page: number;
@@ -30,12 +32,41 @@ export interface FamilyMemberData {
   dob?: string; // Date of Birth (YYYY-MM-DD)
   age: number;
   gender: string; // Male, Female, Other
+  state?: string; // West Bengal, Odisha, Karnataka, etc.
+  residenceType?: string; // Rural, Urban
   occupation: string; // Farmer, Daily Wage Worker, Salaried, Student, Unemployed, Retired, Small Business, Homemaker
   annualIncome: number;
   isStudent: boolean;
   isDisability: boolean;
   landAcres: number;
   notes?: string;
+}
+
+export interface AiMatchResponse {
+  success: boolean;
+  profile: any;
+  matches: Array<{
+    schemeId: string;
+    title: string;
+    category: string;
+    tag: string;
+    benefit: string;
+    description: string;
+    eligibility: string;
+    status: 'ELIGIBLE' | 'POTENTIALLY_ELIGIBLE' | 'MORE_INFO_REQUIRED' | 'INELIGIBLE';
+    relevanceScore: number;
+    ruleVersion: string;
+    officialSourceUrl: string;
+    matchedRules: string[];
+    missingFields: string[];
+    failedRules: string[];
+    followUpQuestions: Array<{
+      field: string;
+      type: 'BOOLEAN' | 'NUMBER' | 'STRING';
+      question: string;
+    }>;
+    explanation: string;
+  }>;
 }
 
 export async function fetchCategories(): Promise<string[]> {
@@ -46,7 +77,7 @@ export async function fetchCategories(): Promise<string[]> {
       return json.data;
     }
   } catch (err) {
-    console.warn('Backend categories API unavailable; using fallback.');
+    console.error('Failed to fetch scheme categories:', err);
   }
   return [];
 }
@@ -56,44 +87,43 @@ export async function fetchSchemes(params?: {
   search?: string;
   page?: number;
   limit?: number;
-}): Promise<FetchSchemesResponse> {
+}): Promise<FetchSchemesResult> {
   try {
     const query = new URLSearchParams();
     if (params?.category) query.append('category', params.category);
     if (params?.search) query.append('search', params.search);
     if (params?.page) query.append('page', String(params.page));
-    query.append('limit', String(params?.limit || 20));
+    if (params?.limit) query.append('limit', String(params.limit));
 
-    const res = await fetch(`${API_BASE_URL}/schemes?${query.toString()}`);
+    const url = `${API_BASE_URL}/schemes?${query.toString()}`;
+    const res = await fetch(url);
     const json = await res.json();
+
     if (json.success && Array.isArray(json.data)) {
       return {
         schemes: json.data,
         count: json.count || json.data.length,
         page: json.page || 1,
-        totalPages: json.totalPages || Math.ceil((json.count || json.data.length) / 20) || 1,
+        totalPages: json.totalPages || 1,
       };
     }
   } catch (err) {
-    console.warn('Backend schemes API unavailable; falling back to local dataset.');
+    console.error('Failed to fetch schemes:', err);
   }
+
   return { schemes: [], count: 0, page: 1, totalPages: 1 };
 }
 
-/* =========================================================================
-   Family Members Management API
-   ========================================================================= */
-
 export async function fetchFamilyMembers(userId?: string): Promise<FamilyMemberData[]> {
   try {
-    const url = userId ? `${API_BASE_URL}/family?userId=${userId}` : `${API_BASE_URL}/family`;
-    const res = await fetch(url);
+    const query = userId ? `?userId=${encodeURIComponent(userId)}` : '';
+    const res = await fetch(`${API_BASE_URL}/family${query}`);
     const json = await res.json();
     if (json.success && Array.isArray(json.data)) {
       return json.data;
     }
   } catch (err) {
-    console.warn('Failed to fetch family members from backend:', err);
+    console.error('Failed to fetch family members:', err);
   }
   return [];
 }
@@ -115,7 +145,10 @@ export async function addFamilyMember(member: FamilyMemberData): Promise<FamilyM
   return null;
 }
 
-export async function updateFamilyMember(id: string, member: Partial<FamilyMemberData>): Promise<FamilyMemberData | null> {
+export async function updateFamilyMember(
+  id: string,
+  member: Partial<FamilyMemberData>
+): Promise<FamilyMemberData | null> {
   try {
     const res = await fetch(`${API_BASE_URL}/family/${id}`, {
       method: 'PUT',
@@ -143,4 +176,24 @@ export async function deleteFamilyMember(id: string): Promise<boolean> {
     console.error(`Failed to delete family member ${id}:`, err);
   }
   return false;
+}
+
+export async function matchHouseholdSchemesApi(payload: {
+  rawPrompt?: string;
+  structuredProfile?: any;
+}): Promise<AiMatchResponse | null> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/ai/match`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const json = await res.json();
+    if (json.success) {
+      return json;
+    }
+  } catch (err) {
+    console.error('Failed to call AI match schemes API:', err);
+  }
+  return null;
 }

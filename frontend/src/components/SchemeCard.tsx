@@ -12,7 +12,7 @@ export const CARD_COLORS: Record<Scheme['color'], string> = {
 }
 
 export function SchemeCard({ scheme, onClick }: { scheme: Scheme; onClick?: () => void }) {
-  const Illustration = ILLUSTRATIONS[scheme.illustration]
+  const Illustration = ILLUSTRATIONS[scheme.illustration] || ILLUSTRATIONS.spiral
   return (
     <button
       onClick={onClick}

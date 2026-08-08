@@ -239,14 +239,17 @@ export function SchemeDetailPage({ schemeId, onBack }: SchemeDetailPageProps) {
 
         {/* Action Bar */}
         <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-border-subtle pt-6">
-          <div className="flex items-center gap-4 text-xs text-ink-400">
-            <span className="flex items-center gap-1.5">
-              <Building2 className="h-4 w-4 text-ink-700" />
+          <div className="flex flex-wrap items-center gap-4 text-xs text-ink-400">
+            <span className="flex items-center gap-1.5 font-semibold text-ink-700">
+              <Building2 className="h-4 w-4 text-brand-orange" />
               Source: {scheme.source || 'Central Government'}
             </span>
             <span className="flex items-center gap-1.5">
               <Users className="h-4 w-4 text-ink-700" />
               {scheme.applicationsCount || 100}+ Applicants
+            </span>
+            <span className="rounded-full bg-canvas px-2.5 py-1 text-[11px] font-mono text-ink-400">
+              Rule Version: 2026-08-01
             </span>
           </div>
 

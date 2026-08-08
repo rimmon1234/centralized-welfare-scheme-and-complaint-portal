@@ -411,6 +411,46 @@ export function FamilyMembersCard() {
                   </div>
                 </div>
 
+                {/* State & Residence Type */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-ink-400">
+                      State Residence
+                    </label>
+                    <div className="relative mt-1.5">
+                      <select
+                        value={formData.state || 'West Bengal'}
+                        onChange={(e) => setFormData({ ...formData, state: e.target.value })}
+                        className="w-full appearance-none rounded-xl border border-border-subtle bg-canvas px-4 py-3 pr-10 text-sm font-medium text-ink-900 focus:outline-none focus:ring-2 focus:ring-brand-orange"
+                      >
+                        {['West Bengal', 'Odisha', 'Karnataka', 'Delhi', 'Bihar', 'Assam', 'Punjab', 'Haryana', 'Gujarat', 'Maharashtra', 'Kerala', 'Tamil Nadu', 'Rajasthan', 'Madhya Pradesh', 'Uttar Pradesh'].map((s) => (
+                          <option key={s} value={s} className="bg-surface text-ink-900">
+                            {s}
+                          </option>
+                        ))}
+                      </select>
+                      <ChevronDown className="pointer-events-none absolute right-3.5 top-3.5 h-4 w-4 text-ink-400" />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-ink-400">
+                      Residence Type
+                    </label>
+                    <div className="relative mt-1.5">
+                      <select
+                        value={formData.residenceType || 'Rural'}
+                        onChange={(e) => setFormData({ ...formData, residenceType: e.target.value })}
+                        className="w-full appearance-none rounded-xl border border-border-subtle bg-canvas px-4 py-3 pr-10 text-sm font-medium text-ink-900 focus:outline-none focus:ring-2 focus:ring-brand-orange"
+                      >
+                        <option value="Rural" className="bg-surface text-ink-900">Rural</option>
+                        <option value="Urban" className="bg-surface text-ink-900">Urban</option>
+                      </select>
+                      <ChevronDown className="pointer-events-none absolute right-3.5 top-3.5 h-4 w-4 text-ink-400" />
+                    </div>
+                  </div>
+                </div>
+
                 {/* Section 2: Financial & Asset Inputs */}
                 <div className="grid grid-cols-2 gap-4">
                   <div>

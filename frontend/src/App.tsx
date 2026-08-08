@@ -118,7 +118,7 @@ export default function App() {
             transition plays on every switch (Animations.md §3.2) */}
         <main
           key={`${tab}-${selectedSchemeId || 'list'}`}
-          className="page-enter mx-auto w-full max-w-[1200px] px-5 py-8 md:px-10 lg:px-12 lg:py-10 max-md:px-4 max-md:pb-28"
+          className="page-enter mx-auto w-full max-w-[1536px] px-4 py-8 md:px-6 lg:px-8 lg:py-10 max-md:px-4 max-md:pb-28"
         >
           {tab === 'overview' &&
             /* Officers get their own desk view; the other tabs stay shared
