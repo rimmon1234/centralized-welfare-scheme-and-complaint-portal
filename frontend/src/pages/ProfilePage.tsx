@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { BadgeCheck, Check, Clock3, Pencil } from 'lucide-react'
 import { PageHeader } from '../components/PageHeader'
 import { Toggle } from '../components/Toggle'
+import { FamilyMembersCard } from '../components/FamilyMembersCard'
 import { profile, user, type ProfileRow } from '../data'
 import { useReveal } from '../hooks/useReveal'
 
@@ -15,7 +16,7 @@ export function ProfilePage() {
     <div>
       <PageHeader
         title="My profile"
-        subtitle="This profile powers every eligibility match you see. Keep it accurate and your documents verified."
+        subtitle="This profile powers every eligibility match you see. Keep your family profile accurate for scheme matching."
       />
 
       <div
@@ -35,6 +36,9 @@ export function ProfilePage() {
         </div>
 
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:col-span-2">
+          <div data-reveal className="col-span-full">
+            <FamilyMembersCard />
+          </div>
           <div data-reveal>
             <InfoCard title="Personal details" rows={profile.personal} />
           </div>

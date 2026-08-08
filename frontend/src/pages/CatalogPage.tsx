@@ -34,7 +34,12 @@ const CATEGORY_DOTS: Record<string, string> = {
   Pension: 'bg-brand-mint',
 }
 
-export function CatalogPage({ role }: { role: Role }) {
+interface CatalogPageProps {
+  role: Role
+  onSelectScheme?: (schemeId: string) => void
+}
+
+export function CatalogPage({ role, onSelectScheme }: CatalogPageProps) {
   const isOfficer = role === 'officer'
   const [query, setQuery] = useState('')
   const [category, setCategory] = useState<string>('All')
@@ -278,9 +283,9 @@ export function CatalogPage({ role }: { role: Role }) {
       >
         {schemes.map((scheme) =>
           isOfficer ? (
-            <OfficerCatalogCard key={scheme.id} scheme={scheme} />
+            <OfficerCatalogCard key={scheme.id} scheme={scheme} onViewDetails={() => onSelectScheme?.(scheme.id)} />
           ) : (
-            <CatalogCard key={scheme.id} scheme={scheme} />
+            <CatalogCard key={scheme.id} scheme={scheme} onViewDetails={() => onSelectScheme?.(scheme.id)} />
           ),
         )}
         {!loading && schemes.length === 0 && (
@@ -336,7 +341,7 @@ export function CatalogPage({ role }: { role: Role }) {
   )
 }
 
-function CatalogCard({ scheme }: { scheme: CatalogScheme }) {
+function CatalogCard({ scheme, onViewDetails }: { scheme: CatalogScheme; onViewDetails: () => void }) {
   const dotClass = CATEGORY_DOTS[scheme.category] || 'bg-brand-orange'
   const tagText = scheme.tag || scheme.category
 
@@ -367,16 +372,17 @@ function CatalogCard({ scheme }: { scheme: CatalogScheme }) {
       </p>
       <div className="mt-auto pt-5">
         <button
+          onClick={onViewDetails}
           className="w-full rounded-[14px] bg-brand-navy text-navy-contrast hover:bg-[#2d2839] dark:hover:bg-[#d9d5cd] px-5 py-3 text-[13px] font-semibold uppercase tracking-[0.04em] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-brand-orange max-md:normal-case max-md:tracking-normal"
         >
-          View Details
+          View Details & Apply
         </button>
       </div>
     </div>
   )
 }
 
-function OfficerCatalogCard({ scheme }: { scheme: CatalogScheme }) {
+function OfficerCatalogCard({ scheme, onViewDetails }: { scheme: CatalogScheme; onViewDetails: () => void }) {
   const stats = officerSchemeStats[scheme.id]
   const pendingPct = stats
     ? Math.min(100, Math.round((stats.pending / stats.applications) * 100))
@@ -432,11 +438,12 @@ function OfficerCatalogCard({ scheme }: { scheme: CatalogScheme }) {
         </div>
       )}
 
-      <div className="mt-auto pt-5">
+      <div className="mt-auto pt-5 flex gap-2">
         <button
+          onClick={onViewDetails}
           className="w-full rounded-[14px] bg-brand-navy px-5 py-3 text-[13px] font-semibold uppercase tracking-[0.04em] text-navy-contrast transition-colors duration-150 hover:bg-[#2d2839] dark:hover:bg-[#d9d5cd] focus-visible:outline-2 focus-visible:outline-brand-orange max-md:normal-case max-md:tracking-normal"
         >
-          Review applications
+          View Details
         </button>
       </div>
     </div>

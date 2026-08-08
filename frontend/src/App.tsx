@@ -16,6 +16,7 @@ import { Footer } from './components/Footer'
 import { ChatPage } from './pages/ChatPage'
 import { ProfilePage } from './pages/ProfilePage'
 import { CatalogPage } from './pages/CatalogPage'
+import { SchemeDetailPage } from './pages/SchemeDetailPage'
 import { HelplinePage } from './pages/HelplinePage'
 import { useTheme } from './hooks/useTheme'
 import type { TabId } from './data'
@@ -35,10 +36,16 @@ function readAuthRole(): Role | null {
 
 export default function App() {
   const [tab, setTab] = useState<TabId>('overview')
+  const [selectedSchemeId, setSelectedSchemeId] = useState<string | null>(null)
   const { theme, toggle } = useTheme()
   /* UI-only mock gate: the AuthPage signs the demo session in/out locally. */
   const [authed, setAuthed] = useState<boolean>(() => readAuthRole() !== null)
   const [role, setRole] = useState<Role>(() => readAuthRole() ?? 'citizen')
+
+  const handleTabSelect = (newTab: TabId) => {
+    setSelectedSchemeId(null)
+    setTab(newTab)
+  }
 
   const signIn = (r: Role) => {
     try {
@@ -59,6 +66,7 @@ export default function App() {
     setRole('citizen')
     setAuthed(false)
     setTab('overview')
+    setSelectedSchemeId(null)
   }
 
   /* Theme crossfade (Animations.md §4 Phase 2): let colors ease for ~300ms
@@ -79,7 +87,7 @@ export default function App() {
     if (window.matchMedia('(pointer: coarse)').matches) {
       window.scrollTo({ top: 0 })
     }
-  }, [tab])
+  }, [tab, selectedSchemeId])
 
   if (!authed) {
     return (
@@ -97,19 +105,19 @@ export default function App() {
       <MobileHeader theme={theme} onToggleTheme={toggleTheme} role={role} />
       <Sidebar
         active={tab}
-        onSelect={setTab}
+        onSelect={handleTabSelect}
         theme={theme}
         onToggleTheme={toggleTheme}
         onSignOut={signOut}
         role={role}
       />
-      <MobileTabBar active={tab} onSelect={setTab} role={role} />
+      <MobileTabBar active={tab} onSelect={handleTabSelect} role={role} />
 
       <div className="relative z-10 lg:pl-[264px]">
         {/* key={tab} re-mounts the content per tab so the page-enter
             transition plays on every switch (Animations.md §3.2) */}
         <main
-          key={tab}
+          key={`${tab}-${selectedSchemeId || 'list'}`}
           className="page-enter mx-auto w-full max-w-[1200px] px-5 py-8 md:px-10 lg:px-12 lg:py-10 max-md:px-4 max-md:pb-28"
         >
           {tab === 'overview' &&
@@ -119,8 +127,15 @@ export default function App() {
               <OfficerPage />
             ) : (
               <>
-                <Hero onReport={() => setTab('helpline')} />
-                <SchemesSection onOpenCatalog={() => setTab('schemes')} />
+                <Hero onReport={() => handleTabSelect('helpline')} />
+                <SchemesSection
+                  onOpenCatalog={() => handleTabSelect('schemes')}
+                  onSelectScheme={(id) => {
+                    setSelectedSchemeId(id)
+                    setTab('schemes')
+                    window.scrollTo({ top: 0, behavior: 'smooth' })
+                  }}
+                />
                 <ResolvedSection />
               </>
             ))}
@@ -128,7 +143,21 @@ export default function App() {
           {tab === 'chat' && <ChatPage role={role} />}
           {tab === 'profile' &&
             (role === 'officer' ? <OfficerProfilePage /> : <ProfilePage />)}
-          {tab === 'schemes' && <CatalogPage role={role} />}
+          {tab === 'schemes' &&
+            (selectedSchemeId ? (
+              <SchemeDetailPage
+                schemeId={selectedSchemeId}
+                onBack={() => setSelectedSchemeId(null)}
+              />
+            ) : (
+              <CatalogPage
+                role={role}
+                onSelectScheme={(id) => {
+                  setSelectedSchemeId(id)
+                  window.scrollTo({ top: 0, behavior: 'smooth' })
+                }}
+              />
+            ))}
           {tab === 'helpline' &&
             (role === 'officer' ? (
               <OfficerHelplinePage />

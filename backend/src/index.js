@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import schemeRoutes from './routes/schemeRoutes.js';
+import familyRoutes from './routes/familyRoutes.js';
 import { prisma } from './config/prismaClient.js';
 
 dotenv.config();
@@ -19,6 +20,7 @@ app.get('/health', (req, res) => {
 
 // Routes
 app.use('/api/schemes', schemeRoutes);
+app.use('/api/family', familyRoutes);
 
 async function startServer() {
   try {

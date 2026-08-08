@@ -5,7 +5,12 @@ import { ListRow } from './ListRow'
 import { ComplaintBar } from './ComplaintBar'
 import { useReveal } from '../hooks/useReveal'
 
-export function SchemesSection({ onOpenCatalog }: { onOpenCatalog?: () => void }) {
+interface SchemesSectionProps {
+  onOpenCatalog?: () => void
+  onSelectScheme?: (schemeId: string) => void
+}
+
+export function SchemesSection({ onOpenCatalog, onSelectScheme }: SchemesSectionProps) {
   const [query, setQuery] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
   const scope = useReveal<HTMLElement>()
@@ -39,13 +44,14 @@ export function SchemesSection({ onOpenCatalog }: { onOpenCatalog?: () => void }
       <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 lg:gap-5 max-md:mt-4 max-md:flex max-md:flex-col max-md:gap-0 max-md:overflow-hidden max-md:rounded-2xl max-md:border max-md:border-border-subtle max-md:bg-surface max-md:divide-y max-md:divide-border-subtle">
         {filtered.map((scheme) => (
           <div data-reveal key={scheme.id}>
-            <SchemeCard scheme={scheme} />
+            <SchemeCard scheme={scheme} onClick={() => onSelectScheme?.(scheme.id)} />
             <div className="md:hidden">
               <ListRow
                 tileClass={CARD_COLORS[scheme.color]}
                 illustration={scheme.illustration}
                 title={scheme.title}
                 meta={scheme.benefit}
+                onClick={() => onSelectScheme?.(scheme.id)}
                 chip={{
                   label: scheme.match,
                   tone: scheme.match === 'Likely eligible' ? 'mint' : 'orange',
